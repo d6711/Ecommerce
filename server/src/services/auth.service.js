@@ -1,6 +1,9 @@
 const { User } = require('../models/user.model')
 const { BadRequestException } = require('../core/error.exception')
 const bcrypt = require('bcrypt')
+const EmailService = require('./email.service')
+const { templateEmailVerify } = require('../utils/templateEmail')
+
 class AuthService {
     static async signUp({ email, name, password }) {
         let user = await User.findOne({ email })
@@ -13,12 +16,29 @@ class AuthService {
             email,
             password: passwordHashed,
             otpCode: verifyCode,
-            otpExpires: new Date(Date.now() + 60 * 1000 * 10),
+            otpExpires: Date.now() + 60 * 1000 * 10,
         })
+        await user.save()
+        EmailService.sendMailOtp({
+            toEmail: email,
+            subject: 'Verify Email',
+            html: templateEmailVerify(name, verifyCode)
+        })
+        return
+    }
+    static async verifyEmailOtp({ email, otp }) {
+        let user = await User.findOne({ email })
+        if (!user) throw new BadRequestException('User not found')
+
+        if (user.otpCode !== otp) throw new BadRequestException('Invalid OTP')
+        if (Date.now() > user.otpExpires) throw new BadRequestException('OTP expired')
+
+        user.otpCode = null
+        user.otpExpires = null
+        user.verify = true
         await user.save()
         return
     }
-    static async verifyEmailOtp() { }
     static async login() { }
     static async logout() { }
     static async handleRefreshToken() { }

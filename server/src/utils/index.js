@@ -1,40 +1,36 @@
-const _ = require('lodash')
-const { Types } = require('mongoose')
-const { BadRequestException } = require('../core/error.exception')
+const _ = require('lodash');
+const { Types } = require('mongoose');
+const { BadRequestException } = require('../core/error.exception');
 
-exports.convertObjectId = function (id) {
+function convertObjectId(id) {
     if (typeof id === 'string')
-        return new Types.ObjectId(id)
+        return new Types.ObjectId(id);
 }
 
-exports.getInfoData = function ({ fields = [], object = {} }) {
-    return _.pick(object, fields)
+function getInfoData({ fields = [], object = {} }) {
+    return _.pick(object, fields);
 }
 
-exports.validTime = function (startDate, endDate) {
-    const now = new Date()
-    const start = new Date(startDate)
-    const end = new Date(endDate)
-    if (now < start || now > end) {
-        const startStr = new Date(start).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
-        const endStr = new Date(end).toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
-        throw new BadRequestException(`Discount valid from ${startStr} to ${endStr}`);
-    }
+function validTime(startDate, endDate) {
+    const now = new Date();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (now < start || now > end) throw new BadRequestException('Invalid discount time')
 }
 
-exports.flattenNestedArray = function ({ array, childrenKey = "children" }) {
-    const flat = []
+function flattenNestedArray({ array, childrenKey = "children" }) {
+    const flat = [];
     for (const item of array) {
-        const { [childrenKey]: children, ...rest } = item
-        flat.push(rest)
+        const { [childrenKey]: children, ...rest } = item;
+        flat.push(rest);
         if (children && children.length > 0) {
-            flat.push(...exports.flattenNestedArray({ array: children, childrenKey }))
+            flat.push(...flattenNestedArray({ array: children, childrenKey }));
         }
     }
-    return flat
+    return flat;
 }
 
-exports.generateSlug = function (text) {
+function generateSlug(text) {
     return text
         .toLowerCase()
         .normalize('NFD')
@@ -42,5 +38,13 @@ exports.generateSlug = function (text) {
         .replace(/\s+/g, '-')
         .replace(/[^\w\-]+/g, '')
         .replace(/\-\-+/g, '-')
-        .replace(/^-+|-+$/g, '')
+        .replace(/^-+|-+$/g, '');
 }
+
+module.exports = {
+    convertObjectId,
+    getInfoData,
+    validTime,
+    flattenNestedArray,
+    generateSlug,
+};
