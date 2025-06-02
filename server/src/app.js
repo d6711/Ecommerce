@@ -6,14 +6,22 @@ require('dotenv/config')
 const path = require('path')
 const { handleError } = require('./middlewares/handleError')
 require('./configs/database')
+const cors = require('cors')
+const cookieParser = require('cookie-parser')
 
 const app = express()
+const corOptions = {
+    origin: "*",
+    credentials: true
+}
 
 app.use(morgan('dev'))
 app.use(helmet())
 app.use(compression())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(cookieParser())
+app.use(cors(corOptions))
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 

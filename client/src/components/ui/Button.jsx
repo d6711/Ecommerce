@@ -4,7 +4,7 @@ function Button({ content, isPrimary = false }) {
         : 'bg-black hover:text-white hover:bg-primary'
     return (
         <button
-            className={`w-full h-10 px-20 py-12 font-bold text-white transition-all duration-300 ease-in-out flex-center rounded-xl ${primaryClass}`}
+            className={`w-full h-10 px-20 font-bold text-white transition-all duration-300 ease-in-out flex-center rounded-xl ${primaryClass}`}
         >
             {content}
         </button>
