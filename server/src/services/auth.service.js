@@ -98,7 +98,7 @@ class AuthService {
         let user = await User.findOne({ email })
         if (!user) throw new BadRequestException('User not registered')
 
-        const newPassword = crypto.randomBytes(5).toString('hex')
+        const newPassword = crypto.randomBytes(10).toString('hex')
         user.password = await bcrypt.hash(newPassword, 10)
         user.save()
 
