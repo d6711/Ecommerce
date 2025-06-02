@@ -17,6 +17,8 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
+app.use('/api', require('./routes'))
+
 app.use((req, res, next) => {
     const error = new Error('URl NOT FOUND')
     error.status = 404

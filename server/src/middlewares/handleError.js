@@ -1,12 +1,12 @@
 const { env, HttpStatus, HttpCode } = require("../configs/constants")
 
-exports.asyncHandler = function (fun) {
+function asyncHandler(fun) {
     return function (req, res, next) {
         fun(req, res, next).catch(next)
     }
 }
 
-exports.handleError = function (error, req, res, next) {
+function handleError(error, req, res, next) {
     const statusCode = error.status || HttpCode.INTERNAL_SERVER_ERROR
     return res.status(statusCode).json({
         error: true,
@@ -18,7 +18,7 @@ exports.handleError = function (error, req, res, next) {
     })
 }
 
-exports.validate = function (schema) {
+function validate(schema) {
     return function (req, res, next) {
         const { error } = schema.validate(req.body, { abortEarly: false })
         if (error) {
@@ -31,6 +31,12 @@ exports.validate = function (schema) {
         }
         next()
     }
+}
+
+module.exports = {
+    asyncHandler,
+    handleError,
+    validate
 }
 
 

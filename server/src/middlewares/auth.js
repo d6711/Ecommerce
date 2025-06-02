@@ -5,7 +5,7 @@ const { User } = require('../models/user.model')
 
 async function authentication(req, res, next) {
     let accessToken = req.headers[Headers.AUTHORIZATION]
-    accessToken = accessToken.starstWith('Beare ') ? accessToken.split(" ")[1] : accessToken
+    accessToken = accessToken.startsWith('Bearer ') ? accessToken.split(" ")[1] : accessToken
 
     const refreshToken = req.headers[Headers.REFRESH_TOKEN]
     if (!accessToken && !refreshToken) throw new UnauthorizedException('Please login')
@@ -18,8 +18,7 @@ async function authentication(req, res, next) {
             const user = await User.findById(decodeUser.userId)
             if (!user) throw new UnauthorizedException('Invalid account')
 
-            req.user = user
-            return next()
+            req.user = decodeUser
         } catch (error) {
             throw new UnauthorizedException('Failed to verify:', error.message)
         }
@@ -32,13 +31,13 @@ async function authentication(req, res, next) {
             const user = await User.findById(decodeUser.userId)
             if (!user) throw new UnauthorizedException('Invalid account')
 
-            req.user = user
+            req.user = decodeUser
             req.refreshToken = refreshToken
-            return next()
         } catch (error) {
             throw new UnauthorizedException('Failed to verify:', error.message)
         }
     }
+    next()
 }
 
 module.exports = { authentication }
