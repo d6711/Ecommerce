@@ -2,7 +2,7 @@ import MainLayout from '@components/layout/MainLayout'
 import logo from '@assets/images/logo.webp'
 
 import { FaRegUser } from 'react-icons/fa'
-import { IoIosGitCompare } from 'react-icons/io'
+import { BsFillBarChartFill } from 'react-icons/bs'
 import { CiHeart } from 'react-icons/ci'
 import { IoCartOutline } from 'react-icons/io5'
 import { FiPhoneCall } from 'react-icons/fi'
@@ -11,10 +11,12 @@ import InputSearch from '@components/layout/Header/InputSearch'
 import Catalog from '@components/layout/Header/Catalog'
 import Navigation from '@components/layout/Header/Navigation'
 import Widget from '@components/layout/Header/Widget'
+import { useContext } from 'react'
+import { SidebarContext } from '@contexts/SidebarContext'
 
 const boxIcon = [
-    { icon: <FaRegUser size={22} />, name: 'Sign In' },
-    { icon: <IoIosGitCompare size={22} />, name: 'Compare', count: 1 },
+    { icon: <FaRegUser size={22} />, name: 'Login' },
+    { icon: <BsFillBarChartFill size={22} />, name: 'Compare', count: 1 },
     { icon: <CiHeart size={22} />, name: 'Favorites', count: 1 },
     { icon: <IoCartOutline size={22} />, name: 'My Cart', count: 0 },
 ]
@@ -31,6 +33,11 @@ const languages = ['Vietnamese', 'English']
 const currencies = ['USD', 'VND']
 
 function Header() {
+    const { setIsOpen, setType } = useContext(SidebarContext)
+    const handleOpenSideBar = (type) => {
+        setIsOpen(true)
+        setType(type)
+    }
     return (
         <>
             <MainLayout>
@@ -51,16 +58,19 @@ function Header() {
                     </div>
 
                     {/* BoxIcon */}
-                    <div className="gap-6 cursor-pointer flex-center">
-                        {boxIcon.map((boxIcon, index) => (
+                    {boxIcon.map((boxIcon, index) => (
+                        <div
+                            className="gap-6 cursor-pointer flex-center"
+                            key={index}
+                            onClick={() => handleOpenSideBar(boxIcon.name)}
+                        >
                             <BoxIcon
-                                key={index}
                                 icon={boxIcon.icon}
                                 name={boxIcon.name}
                                 count={boxIcon.count}
                             />
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
             </MainLayout>
             <div className="bg-secondary">
