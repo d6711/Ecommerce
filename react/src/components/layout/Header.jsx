@@ -1,27 +1,35 @@
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import logo from '@assets/images/logo.png'
 import { FaBars } from 'react-icons/fa'
 import MainLayout from '@components/layout/MainLayout'
 import { PiShoppingCart } from 'react-icons/pi'
+import { Link } from 'react-router-dom'
+import { FaRegUserCircle } from 'react-icons/fa'
+import { StoreContext } from '@contexts/StoreContext'
+import { IoIosLogOut } from 'react-icons/io'
+import { logout } from '@services/authService'
 
 function Header() {
     const [open, setOpen] = useState(false)
+    const handleLogout = async () => {
+        await logout()
+        setIsLogin(!isLogin)
+    }
 
     return (
         <div className="bg-white border-b border-gray-300">
             <MainLayout>
                 <nav className="relative flex items-center justify-between w-full py-4 transition-all">
-                    <a href="#">
+                    <Link to="/">
                         <img src={logo} width={100} alt="logo" />
-                    </a>
+                    </Link>
 
                     {/* Desktop Menu */}
                     <div className="items-center hidden gap-8 sm:flex">
-                        <a href="#">Home</a>
-                        <a href="#">Shop</a>
-                        <a href="#">About</a>
-                        <a href="#">Contact</a>
-
+                        <Link to="/">Home</Link>
+                        <Link to="/shop">Shop</Link>
+                        <Link to="/about">About</Link>
+                        <Link to="/contact">Contact</Link>
                         <div className="items-center hidden gap-2 px-3 text-sm border border-gray-300 rounded-full lg:flex">
                             <input
                                 className="py-1.5 w-full bg-transparent outline-none placeholder-gray-500"
@@ -35,8 +43,8 @@ function Header() {
                                 3
                             </button>
                         </div>
-                        <button className="px-8 py-2 text-white transition rounded-full cursor-pointer bg-primary hover:bg-indigo-600">
-                            Login
+                        <button className="px-8 py-2 text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary/80">
+                            <Link to="/login">Login</Link>
                         </button>
                     </div>
 
@@ -55,18 +63,15 @@ function Header() {
                         open ? 'flex' : 'hidden'
                     } md:hidden flex-col items-start gap-2 px-5 py-4 bg-white shadow-md text-sm w-full`}
                 >
-                    <a href="#" className="block">
-                        Home
-                    </a>
-                    <a href="#" className="block">
-                        About
-                    </a>
-                    <a href="#" className="block">
-                        Contact
-                    </a>
-                    <button className="px-6 py-2 mt-2 text-sm text-white transition rounded-full cursor-pointer bg-primary hover:bg-indigo-600">
-                        Login
-                    </button>
+                    <Link to="/">Home</Link>
+                    <Link to="/shop">Shop</Link>
+                    <Link to="/about">About</Link>
+                    <Link to="/contact">Contact</Link>
+                    <Link to="/login">
+                        <button className="px-6 py-2 mt-2 text-sm text-white transition rounded-full cursor-pointer bg-primary">
+                            Login
+                        </button>
+                    </Link>
                 </div>
             </MainLayout>
         </div>

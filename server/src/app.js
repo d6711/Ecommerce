@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser')
 
 const app = express()
 const corOptions = {
-    origin: "*",
+    origin: 'http://localhost:5000',
     credentials: true
 }
 

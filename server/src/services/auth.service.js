@@ -68,6 +68,9 @@ class AuthService {
             refreshToken
         }
     }
+    static async getMe(userId) {
+        return await User.findById(userId)
+    }
     static async logout(userId) {
         return await KeyTokenService.deleteKeyToken(userId)
     }

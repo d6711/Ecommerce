@@ -4,10 +4,13 @@ const { UnauthorizedException, BadRequestException } = require('../core/error.ex
 const { User } = require('../models/user.model')
 
 async function authentication(req, res, next) {
-    let accessToken = req.headers[Headers.AUTHORIZATION]
-    accessToken = accessToken.startsWith('Bearer ') ? accessToken.split(" ")[1] : accessToken
+    // let accessToken = req.headers[Headers.AUTHORIZATION]
+    // accessToken = accessToken?.startsWith('Bearer ') ? accessToken.split(" ")[1] : accessToken
 
-    const refreshToken = req.headers[Headers.REFRESH_TOKEN]
+    // const refreshToken = req.headers[Headers.REFRESH_TOKEN]
+
+    const accessToken = req.cookies?.accessToken
+    const refreshToken = req.cookies?.refreshToken
     if (!accessToken && !refreshToken) throw new UnauthorizedException('Please login')
 
     if (accessToken) {

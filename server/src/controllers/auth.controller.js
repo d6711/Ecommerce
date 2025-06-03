@@ -34,6 +34,12 @@ class AuthController {
             metadata: { userInfo: payload, accessToken, refreshToken }
         }).send(res)
     }
+    async getMe(req, res) {
+        new Success({
+            message: 'Get info success',
+            metadata: await AuthService.getMe(req.user.userId)
+        }).send(res)
+    }
     async forgotPassword(req, res) {
         new Success({
             message: 'Check new password in your email',
