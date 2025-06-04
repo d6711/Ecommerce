@@ -3,15 +3,17 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { ToastContext } from '@contexts/ToastContext'
 import Input from '@components/ui/Input'
-import { getMe, login, register } from '@services/authService'
+import { getInfo, login, register } from '@services/authService'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
+import { StoreContext } from '@contexts/StoreContext'
 
 function Login() {
     const [isLogin, setIsLogin] = useState(true)
     const { toast } = useContext(ToastContext)
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
+    const { setUserId } = useContext(StoreContext)
 
     const formik = useFormik({
         initialValues: {
@@ -41,11 +43,12 @@ function Login() {
                         refreshToken,
                         userInfo: { userId },
                     } = res.data.metadata
+                    setUserId(userId)
                     Cookies.set('accessToken', accessToken)
                     Cookies.set('refreshToken', refreshToken)
                     Cookies.set('userId', userId)
                     setIsLoading(false)
-                    // navigate('/')
+                    navigate('/')
                 } catch (error) {
                     toast.error(error.response.data.message)
                     setIsLoading(false)
@@ -66,9 +69,6 @@ function Login() {
         setIsLogin(!isLogin)
         formik.resetForm()
     }
-    useEffect(() => {
-        getMe()
-    }, [])
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-light">

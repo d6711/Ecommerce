@@ -7,7 +7,7 @@ export const login = async (body) => {
 export const register = async (body) => {
     return await axiosClient.post('/auth/register', body)
 }
-export const getMe = async () => {
+export const getInfo = async () => {
     return await axiosClient.get('/auth/me')
 }
 

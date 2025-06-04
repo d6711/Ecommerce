@@ -7,13 +7,11 @@ import { Link } from 'react-router-dom'
 import { FaRegUserCircle } from 'react-icons/fa'
 import { StoreContext } from '@contexts/StoreContext'
 import { IoIosLogOut } from 'react-icons/io'
-import { logout } from '@services/authService'
 
 function Header() {
     const [open, setOpen] = useState(false)
-    const handleLogout = async () => {
-        await logout()
-    }
+    const { userInfo, handleLogout } = useContext(StoreContext)
+    console.log(userInfo?.name)
 
     return (
         <div className="bg-white border-b border-gray-300">
@@ -42,9 +40,25 @@ function Header() {
                                 3
                             </button>
                         </div>
-                        <button className="px-8 py-2 text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary/80">
-                            <Link to="/login">Login</Link>
-                        </button>
+                        {userInfo ? (
+                            <div className="relative flex flex-col cursor-pointer gap-1.5 items-center group justify-center">
+                                <FaRegUserCircle size={25} />
+                                <div>{userInfo.name}</div>
+                                <div
+                                    className="absolute top-1/2 flex items-center px-2 py-1 rounded-sm opacity-0 bg-secondary translate-y-0.5 group-hover:translate-y-2 duration-300 transform transition-transform ease-in-out group-hover:opacity-100"
+                                    onClick={handleLogout}
+                                >
+                                    <IoIosLogOut />
+                                    <span>Logout</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <div>
+                                <button className="px-8 py-2 text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary/80">
+                                    <Link to="/login">Login</Link>
+                                </button>
+                            </div>
+                        )}
                     </div>
 
                     <button
