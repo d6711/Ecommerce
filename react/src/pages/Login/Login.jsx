@@ -1,12 +1,13 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { ToastContext } from '@contexts/ToastContext'
 import Input from '@components/ui/Input'
-import { getInfo, login, register } from '@services/authService'
+import { login, register } from '@services/authService'
 import { useNavigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { StoreContext } from '@contexts/StoreContext'
+import Button from '@components/ui/Button'
 
 function Login() {
     const [isLogin, setIsLogin] = useState(true)
@@ -57,6 +58,7 @@ function Login() {
                 try {
                     const res = await register(values)
                     toast.success(res.data.message)
+                    handleResetForm()
                     setIsLoading(false)
                 } catch (error) {
                     toast.error(error.response.data.message)
@@ -109,23 +111,22 @@ function Login() {
                         />
                     )}
 
-                    <div className="flex items-center justify-between w-full mt-8 text-gray-500/80">
+                    <div className="flex items-center justify-between w-full my-8 text-gray-500/80">
                         <div className="flex items-center gap-2">
                             <input className="h-5" type="checkbox" />
                             <label className="text-sm">Remember me</label>
                         </div>
                         <a className="text-sm underline">Forgot password?</a>
                     </div>
-                    <button
-                        type="submit"
-                        className="w-full mt-8 text-white transition-opacity rounded-full cursor-pointer h-11 bg-primary hover:opacity-90"
-                    >
-                        {isLoading
-                            ? 'Loading...'
-                            : isLogin
-                            ? 'Login'
-                            : 'Register'}
-                    </button>
+                    <Button
+                        content={
+                            isLoading
+                                ? 'Loading...'
+                                : isLogin
+                                ? 'Login'
+                                : 'Register'
+                        }
+                    />
                     <div className="flex mt-4 text-sm cursor-pointer text-gray-500/90">
                         {isLogin
                             ? "Don't have an account?"

@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import logo from '@assets/images/logo.png'
 import { FaBars } from 'react-icons/fa'
 import MainLayout from '@components/layout/MainLayout'
@@ -11,7 +11,6 @@ import { IoIosLogOut } from 'react-icons/io'
 function Header() {
     const [open, setOpen] = useState(false)
     const { userInfo, handleLogout } = useContext(StoreContext)
-    console.log(userInfo?.name)
 
     return (
         <div className="bg-white border-b border-gray-300">
@@ -54,7 +53,7 @@ function Header() {
                             </div>
                         ) : (
                             <div>
-                                <button className="px-8 py-2 text-white transition rounded-full cursor-pointer bg-primary hover:bg-primary/80">
+                                <button className="px-8 py-2 text-white transition cursor-pointer bg-primary hover:bg-primary/80">
                                     <Link to="/login">Login</Link>
                                 </button>
                             </div>

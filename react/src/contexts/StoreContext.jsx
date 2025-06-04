@@ -7,6 +7,7 @@ export const StoreContext = createContext()
 export const StoreProvider = ({ children }) => {
     const [userInfo, setUserInfo] = useState(null)
     const [userId, setUserId] = useState(Cookies.get('userId'))
+
     const handleLogout = async () => {
         await logout()
         Cookies.remove('accessToken')
