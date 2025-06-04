@@ -1,14 +1,11 @@
-import google from '@assets/icons/googleLogo.svg'
-import { TfiEmail } from 'react-icons/tfi'
-import { CiLock } from 'react-icons/ci'
-import { LuUser } from 'react-icons/lu'
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { ToastContext } from '@contexts/ToastContext'
 import Input from '@components/ui/Input'
-import { getMe, login } from '@services/authService'
+import { getMe, login, register } from '@services/authService'
 import { useNavigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
 
 function Login() {
     const [isLogin, setIsLogin] = useState(true)
@@ -33,22 +30,45 @@ function Login() {
             ),
         }),
         onSubmit: async (values) => {
-            try {
-                const res = await login(values)
-                console.log(res)
-                toast.success(res.data.message)
-                await getMe()
-                navigate('/')
-            } catch (error) {
-                toast.error(error.response.data.message)
+            if (isLoading) return
+            setIsLoading(true)
+            if (isLogin) {
+                try {
+                    const res = await login(values)
+                    toast.success(res.data.message)
+                    const {
+                        accessToken,
+                        refreshToken,
+                        userInfo: { userId },
+                    } = res.data.metadata
+                    Cookies.set('accessToken', accessToken)
+                    Cookies.set('refreshToken', refreshToken)
+                    Cookies.set('userId', userId)
+                    setIsLoading(false)
+                    // navigate('/')
+                } catch (error) {
+                    toast.error(error.response.data.message)
+                    setIsLoading(false)
+                }
+            } else {
+                try {
+                    const res = await register(values)
+                    toast.success(res.data.message)
+                    setIsLoading(false)
+                } catch (error) {
+                    toast.error(error.response.data.message)
+                    setIsLoading(false)
+                }
             }
         },
     })
-
     const handleResetForm = () => {
         setIsLogin(!isLogin)
         formik.resetForm()
     }
+    useEffect(() => {
+        getMe()
+    }, [])
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-light">
@@ -62,7 +82,6 @@ function Login() {
                     </h2>
                     {!isLogin && (
                         <Input
-                            icon={<LuUser />}
                             id="name"
                             label="Name"
                             type="text"
@@ -70,14 +89,12 @@ function Login() {
                         />
                     )}
                     <Input
-                        icon={<TfiEmail />}
                         id="email"
                         label="Email"
                         type="text"
                         formik={formik}
                     />
                     <Input
-                        icon={<CiLock />}
                         id="password"
                         label="Password"
                         type="password"
@@ -85,7 +102,6 @@ function Login() {
                     />
                     {!isLogin && (
                         <Input
-                            icon={<CiLock />}
                             id="cfmpassword"
                             label="Confirm Password"
                             type="password"
@@ -104,7 +120,11 @@ function Login() {
                         type="submit"
                         className="w-full mt-8 text-white transition-opacity rounded-full cursor-pointer h-11 bg-primary hover:opacity-90"
                     >
-                        {isLogin ? 'Login' : 'Register'}
+                        {isLoading
+                            ? 'Loading...'
+                            : isLogin
+                            ? 'Login'
+                            : 'Register'}
                     </button>
                     <div className="flex mt-4 text-sm cursor-pointer text-gray-500/90">
                         {isLogin

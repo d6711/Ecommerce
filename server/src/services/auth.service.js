@@ -6,6 +6,7 @@ const { templateEmailVerify, templateResetPassword } = require('../utils/templat
 const KeyTokenService = require('./keyToken.service')
 const { createTokenPair } = require('../helpers/auth.helper')
 const crypto = require('crypto')
+const { userInfo } = require('os')
 
 class AuthService {
     static async signUp({ email, name, password }) {
@@ -63,7 +64,7 @@ class AuthService {
         payload.name = user.name
         payload.role = user.role
         return {
-            payload,
+            userInfo: payload,
             accessToken,
             refreshToken
         }

@@ -5,7 +5,7 @@ const { BadRequestException } = require('../core/error.exception')
 function createTokenPair(payload) {
     try {
         const accessToken = JWT.sign(payload, env.ACCESS_TOKEN,
-            { expiresIn: '1d' }
+            { expiresIn: '30s' }
         )
         const refreshToken = JWT.sign(payload, env.REFRESH_TOKEN,
             { expiresIn: '10d' }

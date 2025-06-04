@@ -12,9 +12,9 @@ router.post('/password/forgot', asyncHandler(authController.forgotPassword))
 
 router.use(authentication)
 
+router.get('/me', asyncHandler(authController.getMe))
 router.post('/password/reset', validate(resetPasswordSchema), asyncHandler(authController.resetPassword))
 router.post('/logout', asyncHandler(authController.logout))
 router.post('/refresh-token', asyncHandler(authController.handleRefreshToken))
-router.get('/me', asyncHandler(authController.getMe))
 
 module.exports = router

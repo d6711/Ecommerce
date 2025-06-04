@@ -4,6 +4,9 @@ export const login = async (body) => {
     return await axiosClient.post('/auth/login', body)
 }
 
+export const register = async (body) => {
+    return await axiosClient.post('/auth/register', body)
+}
 export const getMe = async () => {
     return await axiosClient.get('/auth/me')
 }

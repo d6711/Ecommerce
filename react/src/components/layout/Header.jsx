@@ -13,7 +13,6 @@ function Header() {
     const [open, setOpen] = useState(false)
     const handleLogout = async () => {
         await logout()
-        setIsLogin(!isLogin)
     }
 
     return (
