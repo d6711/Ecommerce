@@ -1,0 +1,34 @@
+.container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background-color: #F3F4F6;
+
+    .formLayout{
+        max-width: 310px;
+        width: 100%;
+        padding: 35px 20px;
+        border-radius: 10px;
+        background-color: white;
+        border: 1px solid #e1e1e1;
+    }
+
+    .buttonLogin {
+        margin-top: 8px;
+        justify-content: center;
+        gap: 5px;
+        display: flex;
+        &:hover div{
+            text-decoration: underline;
+        }
+    }
+
+    .convert {
+        border: none;
+        background: none;
+        color: blue;
+        cursor: pointer;
+    }
+}

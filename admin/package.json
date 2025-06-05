@@ -11,18 +11,16 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
-    "@tailwindcss/vite": "^4.1.8",
     "antd": "^5.25.4",
     "axios": "^1.9.0",
     "classnames": "^2.5.1",
-    "clsx": "^2.1.1",
+    "formik": "^2.4.6",
     "js-cookie": "^3.0.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.6.2",
     "sass": "^1.89.1",
-    "tailwind-merge": "^3.3.0",
-    "tailwindcss": "^4.1.8"
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
