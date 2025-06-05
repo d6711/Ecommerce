@@ -1,0 +1,36 @@
+@use '@styles/_variable.module.scss' as *;
+
+.container {
+    min-height: 100vh;
+
+    .logoImg {
+        text-align: center;
+        margin: 10px 0;
+    }
+
+    .logoImg img {
+        max-width: 100px;
+        height: auto;
+        object-fit: cover;
+    }
+
+    .hide img {
+        width: 75px !important;
+    }
+
+    .content {
+        padding: 10px;
+        background-color: white;
+    }
+
+    .header {
+        background-color: $white_color;
+        padding: 0 10px;
+    }
+}
+
+.containerHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
