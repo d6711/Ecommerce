@@ -9,6 +9,8 @@ export const MessageProvider = ({ children }) => {
     success: (msg, duration = 2) => messageApi.success(msg, duration),
     error: (msg, duration = 3) => messageApi.error(msg, duration),
     loading: (msg, duration = 0) => messageApi.loading(msg, duration),
+    info: (msg, duration = 2.5) => messageApi.info(msg, duration),
+    warning: (msg, duration = 2.5) => messageApi.warning(msg, duration),
     open: messageApi.open,
     destroy: messageApi.destroy,
   }

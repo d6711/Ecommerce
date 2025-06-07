@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "commonjs",
+        "baseUrl": ".", // Gốc là thư mục hiện tại
+        "paths": {
+            "@config/*": ["src/config/*"],
+            "@controllers/*": ["src/controllers/*"],
+            "@core/*": ["src/core/*"],
+            "@helpers/*": ["src/helpers/*"],
+            "@middlewares/*": ["src/middlewares/*"],
+            "@models/*": ["src/models/*"],
+            "@routes/*": ["src/routes/*"],
+            "@services/*": ["src/services/*"],
+            "@utils/*": ["src/utils/*"],
+            "@validations/*": ["src/validations/*"]
+        }
+    },
+    "include": ["src/**/*"], // Thư mục code chính
+    "exclude": ["node_modules"] // Loại trừ thư mục không cần thiết
+}

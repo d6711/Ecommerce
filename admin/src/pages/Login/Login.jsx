@@ -1,19 +1,55 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input, Flex, message } from 'antd'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.scss'
 import { useMessageContext } from '@contexts/MessageContext'
+import { login, register } from '@services/authService'
+import Cookies from 'js-cookie'
+import { AuthContext } from '@contexts/AuthContext'
 
 const Login = () => {
   const { container, buttonLogin, convert, formLayout } = styles
   const [isLogin, setIsLogin] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [form] = Form.useForm()
   const message = useMessageContext()
-  console.log(isLogin)
+  const navigate = useNavigate()
+  const { setUserId } = useContext(AuthContext)
 
-  const onFinish = (values) => {
-    console.log('Form submitted:', values)
+  const onFinish = async (values) => {
+    if (isLoading) return
+    setIsLoading(true)
+    if (isLogin) {
+      try {
+        const res = await login(values)
+        message.success(res?.data.message)
+        const {
+          accessToken,
+          refreshToken,
+          userInfo: { userId },
+        } = res.data.metadata
+        setUserId(userId)
+        Cookies.set('accessToken', accessToken)
+        Cookies.set('refreshToken', refreshToken)
+        Cookies.set('userId', userId)
+        setIsLoading(false)
+        navigate('/')
+      } catch (error) {
+        message.error(error.response.data.message)
+        setIsLoading(false)
+      }
+    } else {
+      try {
+        const res = await register(values)
+        message.success(res?.data.message)
+        setIsLoading(false)
+        setIsLogin(true)
+      } catch (error) {
+        message.error(error.response.data.message)
+        setIsLoading(false)
+      }
+    }
   }
 
   useEffect(() => {
@@ -80,7 +116,7 @@ const Login = () => {
 
           <Form.Item>
             <Button type="primary" htmlType="submit" block>
-              {isLogin ? 'Log in' : 'Register'}
+              {isLoading ? 'Loading...' : isLogin ? 'Log in' : 'Register'}
             </Button>
           </Form.Item>
         </Form>
