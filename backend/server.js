@@ -1,4 +1,3 @@
-require('module-alias/register')
 const app = require('./src/app')
 const { env } = require('./src/config/constants')
 

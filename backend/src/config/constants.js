@@ -30,6 +30,11 @@ exports.DiscountType = {
     PERCENT: 'Percent',
 }
 
+exports.VerifyType = {
+    EMAIL: 'Email',
+    RESET_PASSWORD: 'Reset Password'
+}
+
 exports.DiscountApplyType = {
     ALL: 'All',
     PRODUCT: 'Product',

@@ -18,6 +18,7 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
+app.get('/', (req, res) => res.send('Hello Wolrd!'))
 app.use('/v1/api', router)
 
 app.use((req, res, next) => {

@@ -4,25 +4,14 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
-  "_moduleAliases": {
-    "@config": "src/config",
-    "@controllers": "src/controllers",
-    "@core": "src/core",
-    "@helpers": "src/helpers",
-    "@middlewares": "src/middlewares",
-    "@models": "src/models",
-    "@routes": "src/routes",
-    "@services": "src/services",
-    "@utils": "src/utils",
-    "@validations": "src/validations"
+    "dev": "nodemon --exec babel-node server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@babel/runtime": "^7.27.6",
     "bcrypt": "^6.0.0",
     "cloudinary": "^2.6.1",
     "compression": "^1.8.0",
@@ -35,7 +24,14 @@
     "mongoose": "^8.14.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.2",
-    "nodemailer": "^7.0.3",
+    "nodemailer": "^7.0.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.27.4",
+    "@babel/node": "^7.27.1",
+    "@babel/plugin-transform-runtime": "^7.27.4",
+    "@babel/preset-env": "^7.27.2",
+    "babel-plugin-module-resolver": "^5.0.2",
     "nodemon": "^3.1.10"
   }
 }

@@ -1,12 +1,12 @@
-const { Status, env } = require("@config/constants");
-const { BadRequest, Unauthorized, Forbidden } = require("@core/error.exception");
-const { generateRSAKeyPair, createTokenPair } = require("@helpers/auth.helper");
-const OTP = require("@models/otp.model");
-const User = require("@models/user.model");
-const EmailService = require("@services/email.service");
-const KeyTokenService = require("@services/keyToken.service");
-const { getInfoData } = require("@utils/index");
-const { templateVerifyOtp, templateVeryfyLink } = require("@utils/templateEmail");
+const { Status, env, VerifyType } = require("@config/constants")
+const { BadRequest, Unauthorized, Forbidden } = require("@core/error.exception")
+const { generateRSAKeyPair, createTokenPair } = require("@helpers/auth.helper")
+const OTP = require("@models/otp.model")
+const User = require("@models/user.model")
+const EmailService = require("@services/email.service")
+const KeyTokenService = require("@services/keyToken.service")
+const { getInfoData } = require("@utils/index")
+const { templateVerifyOtp, templateVerifyLink } = require("@utils/templateEmail")
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 
@@ -25,9 +25,9 @@ class UserService {
             otpExpires: Date.now() + 10 * 60 * 1000
         })
         await user.save()
-        EmailService.sendMailVerify({
+        EmailService.sendMail({
             toEmail: email,
-            subject: 'Verify Email',
+            subject: 'Chào mừng bạn đến với XStore - Vui lòng xác minh email',
             html: templateVerifyOtp(name, otpCode)
         })
         return
@@ -54,12 +54,13 @@ class UserService {
         if (user.status === Status.BANNED) throw new BadRequest('Your account is banned')
 
         const isMatch = await bcrypt.compare(password, user.password)
-        if (!isMatch) throw new BadRequest('Invalid password')
+        if (!isMatch) throw new Unauthorized('Invalid password')
 
         const { publicKey, privateKey } = generateRSAKeyPair()
-        const { accessToken, refreshToken } = createTokenPair({ userId: user._id, email }, privateKey)
 
-        await KeyTokenService.createKeyToken({ userId: user._id, refreshToken, publicKey, privateKey })
+        const userId = user._id
+        const { accessToken, refreshToken } = createTokenPair({ userId, email }, privateKey)
+        await KeyTokenService.createKeyToken({ userId, publicKey, privateKey, refreshToken })
         return {
             userInfo: getInfoData({
                 fields: ['_id', 'name', 'email', 'role'],
@@ -68,11 +69,12 @@ class UserService {
             accessToken,
             refreshToken
         }
+
     }
     static handleRefreshToken = async ({ refreshToken, user }) => {
         const { userId, email } = user
 
-        const foundUser = await User.findOne({ email }).lean()
+        const foundUser = await User.findOne({ email })
         if (!foundUser) throw new Unauthorized('The user is not registered')
 
         const keyToken = await KeyTokenService.findKeyTokenByRefreshToken({ userId, refreshToken })
@@ -96,8 +98,8 @@ class UserService {
     static logout = async (userId) => {
         return await KeyTokenService.deleteKeyTokenByUserId(userId)
     }
-    static forgotPassword = async ({ email }) => {
-        const user = await User.findOne({ email }).lean()
+    static forgotPasswordV2 = async ({ email }) => {
+        const user = await User.findOne({ email })
         if (!user) throw new BadRequest('User not found')
 
         const otpCode = Math.floor(100000 + Math.random() * 900000)
@@ -105,40 +107,36 @@ class UserService {
             { _id: user._id },
             { otpCode, otpExpires: Date.now() + 60 * 10 * 1000 }
         )
-        EmailService.sendMailVerify({
+        EmailService.sendMail({
             toEmail: email,
-            subject: 'Forgot Password',
+            subject: 'OTP xác minh mật khẩu mới',
             html: templateVerifyOtp(user.name, otpCode)
         })
         return
     }
-    static verifyForgotPasswordByOtp = async ({ email, otp, newPassword }) => {
-        const user = await User.findOne({ email }).lean()
+    static resetPasswordByOtp = async ({ email, otp, newPassword }) => {
+        const user = await User.findOne({ email })
         if (!user) throw new BadRequest('User not found')
 
         if (user.otpCode !== otp) throw new BadRequest('OTP not valid')
         if (user.otpExpires < Date.now()) throw new BadRequest('OTP expired, please verify again')
-        const hashedPassword = await bcrypt.hash(newPassword, 10)
+        const passwordHashed = await bcrypt.hash(newPassword, 10)
         await User.updateOne({ _id: user._id }, {
-            password: hashedPassword,
+            password: passwordHashed,
             otpCode: null,
             otpExpires: null
         })
         return
     }
-    static resetPassword = async ({ email, oldPassword, newPassword, cfmPassword }) => {
-        const user = await User.findOne({ email }).lean()
+    static changePassword = async ({ email, currentPassword, newPassword }) => {
+        const user = await User.findOne({ email })
         if (!user) throw new BadRequest('User not found')
 
-        const isMatch = await bcrypt.compare(oldPassword, user.password)
+        const isMatch = await bcrypt.compare(currentPassword, user.password)
         if (!isMatch) throw new BadRequest('Password not match')
 
-        if (newPassword !== cfmPassword) throw new BadRequest('New password not match')
-
-        const hashedPassword = await bcrypt.hash(newPassword, 10)
-        await User.updateOne({ _id: user._id }, {
-            password: hashedPassword
-        })
+        const passwordHashed = await bcrypt.hash(newPassword, 10)
+        await User.updateOne({ _id: user._id }, { password: passwordHashed })
         return
     }
     static signUpV2 = async ({ email, name, password }) => {
@@ -148,11 +146,12 @@ class UserService {
         const token = crypto.randomBytes(32).toString('hex')
         const tokenHashed = await bcrypt.hash(token, 10)
         const passwordHashed = await bcrypt.hash(password, 10)
-        const verifyLink = `http://${env.URL_SERVER}/v1/api/user/verify?email=${email}&token=${token}`;
+        const verifyLink = `http://${env.URL_SERVER}/v1/api/auth/user/verify-link?email=${email}&token=${token}`
 
         const newOtp = new OTP({
             email,
-            token: tokenHashed
+            token: tokenHashed,
+            type: VerifyType.EMAIL
         })
         await newOtp.save()
 
@@ -162,16 +161,17 @@ class UserService {
         })
         await user.save()
 
-        EmailService.sendMailVerify({
+        EmailService.sendMail({
             toEmail: email,
-            subject: 'Verify Email',
-            html: templateVeryfyLink(name, verifyLink)
+            subject: 'Chào mừng bạn đến với XStore - Vui lòng xác minh email',
+            html: templateVerifyLink(name, verifyLink)
         })
         return
     }
     static async verifyEmailByLink({ email, token }) {
         const otp = await OTP.findOne({ email })
         if (!otp) throw new BadRequest('Token expired, please sign up again')
+        if (otp.type !== VerifyType.EMAIL) throw new BadRequest('Invalid token')
 
         const user = await User.findOne({ email })
         if (!user) throw new BadRequest('Invalid email')
@@ -183,6 +183,41 @@ class UserService {
         user.verify = true
         await OTP.deleteOne({ email })
         await user.save()
+        return
+    }
+    static async forgotPassword({ email }) {
+        const user = await User.findOne({ email })
+        if (!user) throw new BadRequest('User not registered')
+
+        const resetToken = crypto.randomBytes(32).toString('hex')
+        const tokenHashed = crypto.createHash('sha256').update(resetToken).digest('hex')
+        await OTP.findOneAndUpdate(
+            { email, type: VerifyType.RESET_PASSWORD },
+            { token: tokenHashed },
+            { new: true, upsert: true }
+        )
+        const verifyLink = `http://${env.URL_SERVER}/v1/api/auth/user/reset-password/${resetToken}`
+
+        EmailService.sendMail({
+            toEmail: email,
+            subject: 'Reset your password',
+            html: `<p>Click here to reset your password: <a href="${verifyLink}">${verifyLink}</a></p>`
+        })
+        return { verifyLink }
+    }
+    static async resetPasswordByLink({ resetToken, newPassword }) {
+        const tokenHashed = crypto.createHash('sha256').update(resetToken).digest('hex')
+        const otp = await OTP.findOne({
+            token: tokenHashed,
+            type: VerifyType.RESET_PASSWORD,
+        })
+        if (!otp) throw new BadRequest('Invalid or expired token')
+        const user = await User.findOne({ email: otp.email })
+        if (!user) throw new BadRequest('User not found')
+
+        user.password = await bcrypt.hash(newPassword, 10)
+        await user.save()
+        await OTP.deleteOne({ _id: otp._id })
         return
     }
 

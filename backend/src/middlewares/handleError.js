@@ -20,7 +20,7 @@ function handleError(error, req, res, next) {
 
 function validate(schema) {
     return function (req, res, next) {
-        const { error } = schema.validate(req.body, { abortEarly: false })
+        const { error } = schema.validate(req.body, { abortEarly: false, allowUnknown: true })
         if (error) {
             const statusCode = HttpCode.BAD_REQUEST
             return res.status(statusCode).json({

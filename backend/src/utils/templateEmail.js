@@ -74,7 +74,7 @@ function templateVerifyOtp(name, otp) {
 </html>`
 }
 
-function templateVeryfyLink(name, verifyLink) {
+function templateVerifyLink(name, verifyLink) {
     return `<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -113,7 +113,7 @@ function templateVeryfyLink(name, verifyLink) {
         .btn {
             display: inline-block;
             background-color: #2b6cb0;
-            color: #ffffff;
+            color: #ffffff !important;
             padding: 12px 25px;
             border-radius: 8px;
             text-decoration: none;
@@ -131,7 +131,7 @@ function templateVeryfyLink(name, verifyLink) {
     <div class="container">
         <h2>Chào mừng, ${name}!</h2>
         <p>Vui lòng nhấn vào nút bên dưới để xác minh địa chỉ email của bạn:</p>
-        <a href="${verifyLink}" class="btn">Xác minh email</a>
+        <a href="${verifyLink}" class="btn">Xác minh Email</a>
         <p>Nếu bạn không yêu cầu điều này, bạn có thể bỏ qua email này một cách an toàn.</p>
         <p class="footer">&copy; 2025 DEV6711. Mọi quyền được bảo lưu.</p>
     </div>
@@ -141,5 +141,5 @@ function templateVeryfyLink(name, verifyLink) {
 
 module.exports = {
     templateVerifyOtp,
-    templateVeryfyLink
+    templateVerifyLink
 }

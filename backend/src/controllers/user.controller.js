@@ -32,8 +32,57 @@ class UserController {
             metadata: await UserService.login(req.body)
         }).send(res)
     }
-
-
+    async logout(req, res) {
+        new Success({
+            message: 'Logout successfully',
+            metadata: await UserService.logout(req.user.userId)
+        }).send(res)
+    }
+    async refreshToken(req, res) {
+        new Success({
+            message: 'Refresh token successfully',
+            metadata: await UserService.handleRefreshToken({
+                refreshToken: req.refreshToken,
+                user: req.user
+            })
+        }).send(res)
+    }
+    async forgotPassword(req, res) {
+        new Success({
+            message: 'Check verify link sent to your email',
+            metadata: await UserService.forgotPassword(req.body)
+        }).send(res)
+    }
+    async resetPasswordByLink(req, res) {
+        new Success({
+            message: 'Reset password success, you can login now',
+            metadata: await UserService.resetPasswordByLink({
+                resetToken: req.params.resetToken,
+                newPassword: req.body.newPassword
+            })
+        }).send(res)
+    }
+    async forgotPasswordV2(req, res) {
+        new Success({
+            message: 'Check verify code sent to your email',
+            metadata: await UserService.forgotPasswordV2(req.body)
+        }).send(res)
+    }
+    async resetPasswordByOtp(req, res) {
+        new Success({
+            message: 'Reset password success, you can login now',
+            metadata: await UserService.resetPasswordByOtp(req.body)
+        }).send(res)
+    }
+    async changePassword(req, res) {
+        new Success({
+            message: 'Reset password success, you can login now',
+            metadata: await UserService.changePassword({
+                email: req.user.email,
+                ...req.body
+            })
+        }).send(res)
+    }
 }
 
 module.exports = new UserController()

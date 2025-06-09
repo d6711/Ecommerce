@@ -29,5 +29,7 @@ const UserSchema = new Schema(
     },
 )
 
+UserSchema.index({ email: 1 })
+
 const User = model(DOCUMENT_NAME, UserSchema)
 module.exports = User

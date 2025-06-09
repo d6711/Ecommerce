@@ -17,5 +17,7 @@ const KeyTokenSchema = new Schema(
     },
 )
 
+KeyTokenSchema.index({ user: 1, refreshToken: 1 });
+
 const KeyToken = model(DOCUMENT_NAME, KeyTokenSchema)
 module.exports = KeyToken
