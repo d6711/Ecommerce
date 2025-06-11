@@ -1,15 +1,15 @@
-const { BadRequest } = require('@core/error.exception')
+const { BadRequest, Unauthorized } = require('@core/error.exception')
 const JWT = require('jsonwebtoken')
 const { generateKeyPairSync } = require('crypto')
 
-function signToken({ payload, privateKey, expiresIn = '30m' }) {
+function signToken({ payload, privateKey, expiresIn = '1m' }) {
     try {
         return JWT.sign(payload, privateKey, {
             algorithm: 'RS256',
             expiresIn
         })
     } catch (error) {
-        throw new BadRequest(`Failed to sign token: ${error.message}`)
+        throw new Unauthorized(`Failed to sign token: ${error.message}`)
     }
 }
 
@@ -17,7 +17,7 @@ function verifyToken(token, publicKey) {
     try {
         return JWT.verify(token, publicKey, { algorithms: ['RS256'] })
     } catch (error) {
-        throw new BadRequest(`Failed to verify token: ${error.message}`)
+        throw new Unauthorized(`Failed to verify token: ${error.message}`)
     }
 }
 

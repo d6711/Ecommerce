@@ -220,7 +220,9 @@ class UserService {
         await OTP.deleteOne({ _id: otp._id })
         return
     }
-
+    static async getMe(userId) {
+        return await User.findById(userId)
+    }
 }
 
 module.exports = UserService

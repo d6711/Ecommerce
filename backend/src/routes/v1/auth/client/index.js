@@ -25,6 +25,7 @@ router.post('/login', validate(loginUserSchema), asyncHandler(userController.log
 router.use(authentication)
 
 router.post('/logout', asyncHandler(userController.logout))
+router.get('/me', asyncHandler(userController.getInfo))
 router.post('/refresh-token', asyncHandler(userController.refreshToken))
 router.post('/change-password', validate(changePasswordSchema), asyncHandler(userController.changePassword))
 

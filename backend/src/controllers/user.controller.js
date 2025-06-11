@@ -83,6 +83,12 @@ class UserController {
             })
         }).send(res)
     }
+    async getInfo(req, res) {
+        new Success({
+            message: 'Get me successfully',
+            metadata: await UserService.getMe(req.user.userId)
+        }).send(res)
+    }
 }
 
 module.exports = new UserController()

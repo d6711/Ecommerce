@@ -1,14 +1,29 @@
-import { BarChart3, Home, Menu, Settings, ShoppingCart, Users, X } from 'lucide-react'
+import {
+    BarChart3,
+    ChartBarStacked,
+    Home,
+    Layers,
+    Menu,
+    Settings,
+    ShoppingCart,
+    Users,
+    Warehouse,
+    X,
+} from 'lucide-react'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
 const SideBar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true)
     const menuItems = [
-        { text: 'Dashboard', icon: Home, path: '/dashboard' },
+        { text: 'Dashboard', icon: Home, path: '/' },
         { text: 'Users', icon: Users, path: '/users' },
-        { text: 'Analytics', icon: BarChart3, path: '/analytics' },
         { text: 'Orders', icon: ShoppingCart, path: '/orders' },
+        { text: 'Category', icon: BarChart3, path: '/categories' },
+        { text: 'Product', icon: Layers, path: '/products' },
+        { text: 'Inventory', icon: Warehouse, path: '/inventories' },
+        { text: 'Customer', icon: Users, path: '/customers' },
+        { text: 'News', icon: ChartBarStacked, path: '/news' },
         { text: 'Settings', icon: Settings, path: '/settings' },
     ]
     return (
@@ -18,18 +33,18 @@ const SideBar = () => {
         >
             <div className="flex items-center justify-between p-4 border-b border-slate-700">
                 {sidebarOpen && (
-                    <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                        AdminPanel
+                    <h1 className="text-xl font-bold text-center text-transparent bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text">
+                        X-Store
                     </h1>
                 )}
                 <button
                     onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="p-1 rounded-lg hover:bg-slate-700 transition-colors"
+                    className="p-1 transition-colors rounded-lg hover:bg-slate-700"
                 >
                     {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                 </button>
             </div>
-            <nav className="mt-6 px-3">
+            <nav className="px-3 mt-6">
                 {menuItems.map((item) => {
                     const IconComponent = item.icon
                     return (
@@ -48,7 +63,7 @@ const SideBar = () => {
                             <IconComponent size={20} className="flex-shrink-0" />
                             {sidebarOpen && <span className="ml-3 font-medium">{item.text}</span>}
                             {!sidebarOpen && (
-                                <div className="absolute left-16 bg-slate-800 text-white px-2 py-1 rounded-md text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                                <div className="absolute px-2 py-1 text-sm text-white transition-opacity duration-200 rounded-md opacity-0 pointer-events-none left-16 bg-slate-800 group-hover:opacity-100">
                                     {item.text}
                                 </div>
                             )}

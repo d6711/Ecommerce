@@ -7,6 +7,7 @@ const path = require('path')
 const { handleError } = require('@middlewares/handleError')
 const router = require('@routes/v1')
 require('@config/database')
+const cors = require('cors')
 
 const app = express()
 
@@ -15,7 +16,7 @@ app.use(helmet())
 app.use(compression())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
+app.use(cors({ origin: "*", credentials: true }))
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 app.get('/', (req, res) => res.send('Hello Wolrd!'))
