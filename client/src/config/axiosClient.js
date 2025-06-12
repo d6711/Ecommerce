@@ -35,13 +35,13 @@ const handleResponseErr = async (err) => {
         const refreshToken = Cookies.get('refreshToken')
         const userId = Cookies.get('userId') // Lấy client-id từ cookie
 
-        if (!refreshToken) return Promise.reject(err)
+        if (!refreshToken || !userId) return Promise.reject(err)
 
         try {
-            const res = await axiosRefresh.post('/auth/user/refresh-token', null, {
+            const res = await axiosRefresh.post('/auth/refresh-token', null, {
                 headers: {
                     'x-rtoken-key': refreshToken,
-                    ...(userId && { 'client-id': userId }) // Đính kèm nếu có
+                    'client-id': userId
                 }
             })
 

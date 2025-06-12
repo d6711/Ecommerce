@@ -1,4 +1,5 @@
 const { BadRequest } = require("@core/error.exception")
+const { pagination } = require("@helpers/dbQuery")
 const Category = require("@models/category.model")
 
 class CategoryService {
@@ -19,8 +20,9 @@ class CategoryService {
         }
         return await Category.findByIdAndUpdate(id, bodyUpdate, { new: true })
     }
-    static async getCategories() {
-        return await Category.find().select('-__v -createdAt -updatedAt -isActive').populate('parentId')
+    static async getCategories({ page, limit }) {
+        return await pagination({ model: Category, page, limit, filter: { parentId: { $ne: null } } })
+
     }
     static async getCategoryByParentId(parentId) {
         return await Category.find({ parentId }).select('-__v -createdAt -updatedAt -isActive')

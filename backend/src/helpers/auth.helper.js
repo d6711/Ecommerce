@@ -2,7 +2,7 @@ const { BadRequest, Unauthorized } = require('@core/error.exception')
 const JWT = require('jsonwebtoken')
 const { generateKeyPairSync } = require('crypto')
 
-function signToken({ payload, privateKey, expiresIn = '1m' }) {
+function signToken({ payload, privateKey, expiresIn = '30m' }) {
     try {
         return JWT.sign(payload, privateKey, {
             algorithm: 'RS256',

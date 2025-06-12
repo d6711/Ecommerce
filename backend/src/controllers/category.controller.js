@@ -3,9 +3,11 @@ const CategoryService = require("@services/category.service")
 
 class CategoryController {
     async getAllCategories(req, res) {
+        const { data, page, limit, totalDocuments, totalPages } = await CategoryService.getCategories(req.query)
         new Success({
             message: 'Get all categories successfully',
-            metadata: await CategoryService.getCategories()
+            pagination: { page, limit, totalDocuments, totalPages },
+            metadata: data
         }).send(res)
     }
     async getSubCategories(req, res) {

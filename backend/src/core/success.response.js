@@ -5,13 +5,13 @@ class Success {
         message,
         httpCode = HttpCode.OK,
         httpStatus = HttpStatus.OK,
-        paginate,
+        pagination,
         metadata,
     }) {
         this.message = message || httpStatus
         this.statusCode = httpCode
-        if (paginate && Object.keys(paginate).length > 0) {
-            this.paginate = paginate
+        if (pagination && Object.keys(pagination).length > 0) {
+            this.pagination = pagination
         }
         this.metadata = metadata
     }
@@ -21,7 +21,7 @@ class Success {
             message: this.message,
             statusCode: this.statusCode,
         }
-        if (this.paginate) obj.paginate = this.paginate
+        if (this.pagination) obj.pagination = this.pagination
         if (this.metadata) obj.metadata = this.metadata
         return obj
     }
@@ -35,12 +35,12 @@ class Success {
 }
 
 class Created extends Success {
-    constructor({ message, paginate, metadata }) {
+    constructor({ message, pagination, metadata }) {
         super({
             message,
             httpCode: HttpCode.CREATED,
             httpStatus: HttpStatus.CREATED,
-            paginate,
+            pagination,
             metadata,
         })
     }
