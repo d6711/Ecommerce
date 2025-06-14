@@ -24,6 +24,9 @@ class CategoryService {
         return await pagination({ model: Category, page, limit, filter: { parentId: { $ne: null } } })
 
     }
+    static async getCategoryParent() {
+        return await Category.find({ parentId: null })
+    }
     static async getCategoryByParentId(parentId) {
         return await Category.find({ parentId }).select('-__v -createdAt -updatedAt -isActive')
     }

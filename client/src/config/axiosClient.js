@@ -56,6 +56,7 @@ const handleResponseErr = async (err) => {
         } catch (error) {
             Cookies.remove('accessToken')
             Cookies.remove('refreshToken')
+            Cookies.remove('userId')
             return Promise.reject(error)
         }
     }

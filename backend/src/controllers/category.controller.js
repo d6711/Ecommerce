@@ -16,6 +16,12 @@ class CategoryController {
             metadata: await CategoryService.getCategoryByParentId(req.params.parentId)
         }).send(res)
     }
+    async getCategoryParent(req, res) {
+        new Success({
+            message: 'Get parent categories successfully',
+            metadata: await CategoryService.getCategoryParent()
+        }).send(res)
+    }
     async createCategory(req, res) {
         console.log(req.body)
         new Success({

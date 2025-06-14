@@ -5,6 +5,7 @@ const { Router } = require('express')
 const router = Router()
 
 router.get('/', asyncHandler(categoryController.getAllCategories))
+router.get('/parent', asyncHandler(categoryController.getCategoryParent))
 router.get('/:id', asyncHandler(categoryController.getCategoryById))
 router.get('/:parentId/child', asyncHandler(categoryController.getSubCategories))
 
