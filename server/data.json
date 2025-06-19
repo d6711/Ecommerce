@@ -1,0 +1,182 @@
+[
+  {
+    "_id": { "$oid": "650000000000000000000001" },
+    "name": "Điện thoại",
+    "slug": "dien-thoai",
+    "description": "Danh mục điện thoại thông minh",
+    "parentId": null,
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000002" },
+    "name": "Laptop",
+    "slug": "laptop",
+    "description": "Máy tính xách tay đa dạng phân khúc",
+    "parentId": null,
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000003" },
+    "name": "Tablet",
+    "slug": "tablet",
+    "description": "Máy tính bảng học tập, giải trí",
+    "parentId": null,
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000004" },
+    "name": "Phụ kiện điện thoại",
+    "slug": "phu-kien-dien-thoai",
+    "description": "Phụ kiện hỗ trợ điện thoại",
+    "parentId": null,
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000005" },
+    "name": "Phụ kiện máy tính",
+    "slug": "phu-kien-may-tinh",
+    "description": "Các loại phụ kiện hỗ trợ máy tính",
+    "parentId": null,
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000006" },
+    "name": "Âm thanh",
+    "slug": "am-thanh",
+    "description": "Thiết bị âm thanh các loại",
+    "parentId": null,
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000007" },
+    "name": "Ốp lưng",
+    "slug": "op-lung",
+    "description": "Ốp bảo vệ cho điện thoại",
+    "parentId": { "$oid": "650000000000000000000004" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000008" },
+    "name": "Miếng dán màn hình",
+    "slug": "mieng-dan-man-hinh",
+    "description": "Dán bảo vệ cho điện thoại, tablet",
+    "parentId": { "$oid": "650000000000000000000004" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000009" },
+    "name": "Sạc và cáp",
+    "slug": "sac-va-cap",
+    "description": "Sạc nhanh, cáp sạc đa năng",
+    "parentId": { "$oid": "650000000000000000000004" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000010" },
+    "name": "Tai nghe",
+    "slug": "tai-nghe",
+    "description": "Tai nghe có dây và không dây",
+    "parentId": { "$oid": "650000000000000000000006" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000011" },
+    "name": "Loa",
+    "slug": "loa",
+    "description": "Loa bluetooth, loa mini,...",
+    "parentId": { "$oid": "650000000000000000000006" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000012" },
+    "name": "Bàn phím",
+    "slug": "ban-phim",
+    "description": "Bàn phím cơ, bàn phím văn phòng",
+    "parentId": { "$oid": "650000000000000000000005" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000013" },
+    "name": "Chuột",
+    "slug": "chuot",
+    "description": "Chuột có dây và không dây",
+    "parentId": { "$oid": "650000000000000000000005" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000014" },
+    "name": "Webcam",
+    "slug": "webcam",
+    "description": "Webcam cho học và họp online",
+    "parentId": { "$oid": "650000000000000000000005" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000015" },
+    "name": "Tản nhiệt",
+    "slug": "tan-nhiet",
+    "description": "Đế tản nhiệt cho laptop",
+    "parentId": { "$oid": "650000000000000000000005" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000016" },
+    "name": "Balo & túi chống sốc",
+    "slug": "balo-tui-chong-soc",
+    "description": "Balo laptop, túi chống sốc",
+    "parentId": { "$oid": "650000000000000000000005" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000017" },
+    "name": "Phụ kiện âm thanh",
+    "slug": "phu-kien-am-thanh",
+    "description": "Đệm tai, dây tai nghe, đầu chuyển,...",
+    "parentId": { "$oid": "650000000000000000000006" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000018" },
+    "name": "Giá đỡ điện thoại",
+    "slug": "gia-do-dien-thoai",
+    "description": "Giá đỡ bàn, kẹp xe,...",
+    "parentId": { "$oid": "650000000000000000000004" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000019" },
+    "name": "Hub & Dock",
+    "slug": "hub-dock",
+    "description": "Bộ chia cổng USB, HDMI,...",
+    "parentId": { "$oid": "650000000000000000000005" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  },
+  {
+    "_id": { "$oid": "650000000000000000000020" },
+    "name": "Phụ kiện tablet",
+    "slug": "phu-kien-tablet",
+    "description": "Bao da, bàn phím, bút cảm ứng",
+    "parentId": { "$oid": "650000000000000000000003" },
+    "createdAt": { "$date": "2025-06-08T00:00:00Z" },
+    "updatedAt": { "$date": "2025-06-08T00:00:00Z" }
+  }
+]
