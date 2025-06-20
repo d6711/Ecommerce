@@ -25,17 +25,13 @@ const CategorySchema = new Schema(
 
 CategorySchema.index({ name: 'text' })
 CategorySchema.pre('save', function (next) {
-    if (!this.slug && this.name) {
-        this.slug = generateSlug(this.name)
-    }
+    if (!this.slug && this.name) this.slug = generateSlug(this.name)
     next()
 })
 
 CategorySchema.pre('findOneAndUpdate', function (next) {
     const update = this.getUpdate()
-    if (update.name && !update.slug) {
-        update.slug = generateSlug(update.name)
-    }
+    if (update.name && !update.slug) update.slug = generateSlug(update.name)
     next()
 })
 

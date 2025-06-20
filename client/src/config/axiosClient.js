@@ -11,9 +11,7 @@ const axiosClient = axios.create({
 })
 const handleRequestSuccess = async (config) => {
     const accessToken = Cookies.get('accessToken')
-    const userId = Cookies.get('userId')
     if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
-    if (userId) config.headers['client-id'] = userId
     return config
 }
 
@@ -41,7 +39,6 @@ const handleResponseErr = async (err) => {
             const res = await axiosRefresh.post('/auth/refresh-token', null, {
                 headers: {
                     'x-rtoken-key': refreshToken,
-                    'client-id': userId
                 }
             })
 
@@ -51,7 +48,6 @@ const handleResponseErr = async (err) => {
             Cookies.set('refreshToken', newRefreshToken)
 
             originalRequest.headers.Authorization = `Bearer ${newAccessToken}`
-            originalRequest.headers['client-id'] = userId
             return axiosClient(originalRequest)
         } catch (error) {
             Cookies.remove('accessToken')

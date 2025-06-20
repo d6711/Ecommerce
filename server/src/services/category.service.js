@@ -21,22 +21,36 @@ class CategoryService {
         return await Category.findByIdAndUpdate(id, bodyUpdate, { new: true })
     }
     static async getCategories({ page, limit }) {
-        return await pagination({ model: Category, page, limit, filter: { parentId: { $ne: null } } })
-
+        return await pagination({
+            model: Category,
+            page, limit,
+            filter: { parentId: { $ne: null } }
+        })
     }
+    static async getCategoryById(id) {
+        const category = await Category.findById(id)
+        if (!category) throw new BadRequest('Category not found')
+        return category
+    }
+    static async deleteCategory(id) {
+        const category = await Category.findById(id)
+        if (!category) throw new BadRequest('Category not found')
+        return await Category.deleteMany({ $or: [{ parentId: id }, { _id: id }] })
+    }
+    // Lấy danh sách danh mục cha
     static async getCategoryParent() {
         return await Category.find({ parentId: null })
     }
+    // Lấy danh sách danh mục con bằng parentId
     static async getCategoryByParentId(parentId) {
-        return await Category.find({ parentId }).select('-__v -createdAt -updatedAt -isActive')
+        return await Category.find({ parentId }).lean()
     }
-    static async getCategoryById(id) {
-        return await Category.findById(id).select('-__v -createdAt -updatedAt -isActive')
+    // Lấy mảng categoryId thuộc danh mục cha
+    static async getArrayCategoryId(parentId) {
+        const categories = await Category.find({ parentId }).lean()
+        const categoryIds = [parentId, ...categories.map(category => category._id.toString())]
+        return categoryIds
     }
-    static async deleteCategory(id) {
-        return await Category.deleteMany({ $or: [{ parentId: id }, { _id: id }] })
-    }
-
 }
 
 module.exports = CategoryService
