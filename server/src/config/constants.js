@@ -86,7 +86,8 @@ exports.Status = {
     BLOCK: 'Block',
     PENDING: 'Pending',
     DELETED: 'Deleted',
-    BANNED: 'Banned'
+    BANNED: 'Banned',
+    COMPLETED: 'Completed',
 }
 
 exports.OrderStatus = {

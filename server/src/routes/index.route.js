@@ -6,6 +6,7 @@ router.use('/auth', require('./auth.route'))
 router.use('/categories', require('./category.route'))
 router.use('/products', require('./product.route'))
 router.use('/discounts', require('./discount.route'))
+router.use('/cart', require('./cart.route'))
 router.use('/upload', require('./upload.route'))
 
 router.post('/seed', async (req, res) => {
