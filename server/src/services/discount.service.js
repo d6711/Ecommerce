@@ -17,7 +17,7 @@ class DiscountService {
         if (startDate > endDate) throw new BadRequest("startDate must be before endDate")
         if (endDate < Date.now()) throw new BadRequest("endDate must be in the future")
 
-        if (type === DiscountType.PERCENT(value > 100 || value < 0)) {
+        if (type === DiscountType.PERCENT && (value > 100 || value < 0)) {
             throw new BadRequest('Percent value must be between 0 and 100')
         }
 
@@ -118,11 +118,11 @@ class DiscountService {
         for (const p of products) {
             const product = await Product.findById(p.productId)
             if (!product) throw new BadRequest(`ProductId ${p.productId} not valid`)
-            if (product.stock < p.quantity) throw new BadRequestException('Product quantity in stock not enough')
-            if (product.price !== p.price) throw new BadRequestException(`Product price of ${p.productId} not valid`)
+            if (product.stock < p.quantity) throw new BadRequest('Product quantity in stock not enough')
+            if (product.price !== p.price) throw new BadRequest(`Product price of ${p.productId} not valid`)
             totalOrder += p.quantity * p.price
         }
-        if (minOrderValue > totalOrder) throw new BadRequestException(`Discount code require min order value of ${minOrderValue}`)
+        if (minOrderValue > totalOrder) throw new BadRequest(`Discount code require min order value of ${minOrderValue}`)
         const discountValue = type === DiscountType.FIXED
             ? value
             : Math.min(totalOrder * (value / 100), maxValue)
