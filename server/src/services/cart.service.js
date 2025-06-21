@@ -23,6 +23,9 @@ class CartService {
         if (!user) throw new BadRequest('User not found')
 
         let cart = await Cart.findOne({ user: userId })
+        if (cart.discountCode) {
+            await CartService.removeDiscount({ userId, cartId: cart._id })
+        }
         if (!cart) cart = await Cart.create({ user: userId })
 
         let cartItem = await CartItem.findOneAndUpdate(
@@ -65,6 +68,10 @@ class CartService {
 
         const cart = await Cart.findOne({ user: userId }).lean()
         if (!cart) throw new BadRequest('Cart empty')
+
+        if (cart.discountCode) {
+            await CartService.removeDiscount({ userId, cartId: cart._id })
+        }
 
         let cartItem = await CartItem.findOne({ cartId: cart._id, productId })
         if (!cartItem) throw new BadRequest('Product has not added to cart')
@@ -154,6 +161,21 @@ class CartService {
             discountValue,
             totalAmount
         }
+    }
+    static async removeDiscount({ userId, cartId }) {
+        const user = await getUserById(userId)
+        if (!user) throw new BadRequest('User not found')
+
+        let cart = await Cart.findById(cartId)
+        if (!cart || !cart.cartItems) throw new BadRequest('Cart empty')
+
+        if (cart.discountCode) return await Cart.findByIdAndUpdate(cartId, {
+            $set: {
+                discountCode: null,
+                discountValue: 0,
+                totalAmount: cart.totalOrder
+            },
+        }, { new: true })
     }
 }
 

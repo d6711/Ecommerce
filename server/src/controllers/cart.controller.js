@@ -50,19 +50,19 @@ class CartController {
             })
         }).send(res)
     }
+    removeDiscount = async (req, res) => {
+        new Success({
+            message: 'Remove discount cart successfully',
+            metadata: await CartService.removeDiscount({
+                userId: req.user.userId,
+                cartId: req.params.cartId
+            })
+        }).send(res)
+    }
     // checkoutCart = async (req, res) => {
     //     new Success({
-    //         message: 'Checkout cart',
+    //         message: 'Checkout cart successfully',
     //         metadata: await CartService.checkoutCart(req.user.userId)
-    //     }).send(res)
-    // }
-    // removeDiscount = async (req, res) => {
-    //     new Success({
-    //         message: 'Remove discount cart success',
-    //         metadata: await CartService.removeDiscount({
-    //             userId: req.user.userId,
-    //             cartId: req.params.cartId
-    //         })
     //     }).send(res)
     // }
 

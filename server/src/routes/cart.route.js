@@ -12,7 +12,7 @@ router.post('/', validate(addToCartSchema), asyncHandler(cartController.addToCar
 router.post('/update', validate(updateCartSchema), asyncHandler(cartController.updateCart))
 router.post('/apply-discount', validate(applyDiscountSchema), asyncHandler(cartController.applyDiscountToCart))
 // router.post('/checkout/stripe', asyncHandler(cartController.checkoutCart))
-// router.post('/remove-discount/:cartId', asyncHandler(cartController.removeDiscount))
+router.post('/remove-discount/:cartId', asyncHandler(cartController.removeDiscount))
 router.delete('/item', asyncHandler(cartController.removeCartItem))
 router.delete('/:cartId', asyncHandler(cartController.deleteCart))
 

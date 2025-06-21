@@ -1,5 +1,6 @@
 import { createContext } from 'react'
-import { toast, ToastContainer } from 'react-toastify'
+// import { toast, ToastContainer } from 'react-toastify'
+import { toast, Toaster } from 'react-hot-toast'
 
 export const ToastContext = createContext()
 
@@ -8,7 +9,7 @@ export const ToastProvider = ({ children }) => {
     return (
         <ToastContext.Provider value={value}>
             {children}
-            <ToastContainer />
+            <Toaster />
         </ToastContext.Provider>
     )
 }
