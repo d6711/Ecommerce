@@ -9,7 +9,7 @@ async function pagination({
     limit = 10,
     sortBy = 'createdAt',
     order = 'desc',
-    select = ''
+    select = '-__v -createdAt -updatedAt'
 }) {
     try {
         page = Math.max(1, parseInt(page) || 1)

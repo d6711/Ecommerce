@@ -24,6 +24,11 @@ class ProductService {
         }
         return await Product.findByIdAndUpdate(id, updateData, { new: true })
     }
+    static async deleteProduct(id) {
+        const product = await Product.findById(id)
+        if (!product) throw new BadRequest('Product not found')
+        return await Product.deleteOne({ _id: id })
+    }
     static async getAllProducts() {
         return await Product.find().lean()
     }
@@ -32,21 +37,19 @@ class ProductService {
         if (!product) throw new BadRequest('Product not found')
         return product
     }
+    // Lấy sản phẩm theo danh mục
     static async getProductByCategoryId(categoryId) {
         await CategoryService.getCategoryById(categoryId)
         const categoryIds = await CategoryService.getArrayCategoryId(categoryId)
         return await Product.find({ categoryId: { $in: categoryIds } }).lean()
     }
+    // Lấy sản phẩm nổi bật
     static async getFeaturedProducts(limit = 10) {
         return await Product.find({ isFeatured: true }).limit(limit).lean()
     }
+    // Lấy sản phẩm bán chạy
     static async getBestSellers(limit = 10) {
         return await Product.find().sort({ soldCount: -1 }).limit(limit).lean()
-    }
-    static async deleteProduct(id) {
-        const product = await Product.findById(id)
-        if (!product) throw new BadRequest('Product not found')
-        return await Product.deleteOne({ _id: id })
     }
     static async activeProduct(id) {
         const product = await Product.findById(id)
