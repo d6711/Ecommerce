@@ -14,7 +14,7 @@ const CartSchema = new Schema(
         discountValue: Number,
         status: {
             type: String,
-            enum: [Status.ACTIVE, Status.COMPLETED],
+            enum: [Status.ACTIVE, Status.LOCKED, Status.COMPLETED],
             default: Status.ACTIVE
         },
     },

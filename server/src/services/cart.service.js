@@ -1,15 +1,15 @@
+const { Status } = require("../config/constants")
 const { BadRequest } = require("../core/error.exception")
 const { getUserById } = require("../helpers/auth.helper")
 const { Cart, CartItem } = require("../models/cart.model")
 const Product = require("../models/product.model")
-const DiscountService = require("./discount.service")
 
 class CartService {
     static async calcTotalOrder({ userId }) {
-        const cart = await Cart.findOne({ user: userId }).populate('cartItems').lean()
+        const cart = await Cart.findOne({ user: userId, status: Status.ACTIVE }).populate('cartItems').lean()
         const totalOrder = cart.cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0)
         return await Cart.findOneAndUpdate(
-            { user: userId },
+            { user: userId, status: Status.ACTIVE },
             { totalOrder, totalAmount: totalOrder },
             { new: true }
         )
@@ -21,8 +21,8 @@ class CartService {
         const user = await getUserById(userId)
         if (!user) throw new BadRequest('User not found')
 
-        let cart = await Cart.findOne({ user: userId })
-        if (cart.discountCode) await CartService.removeDiscount({ userId, cartId: cart._id })
+        let cart = await Cart.findOne({ user: userId, status: Status.ACTIVE })
+        if (cart.status !== Status.ACTIVE) throw new BadRequest('Cart is locked, cannot add to cart')
 
         if (!cart) cart = await Cart.create({ user: userId })
 
@@ -64,12 +64,10 @@ class CartService {
         const user = await getUserById(userId)
         if (!user) throw new BadRequest('User not found')
 
-        const cart = await Cart.findOne({ user: userId }).lean()
+        const cart = await Cart.findOne({ user: userId, status: Status.ACTIVE })
         if (!cart) throw new BadRequest('Cart empty')
 
-        if (cart.discountCode) {
-            await CartService.removeDiscount({ userId, cartId: cart._id })
-        }
+        if (cart.status !== Status.ACTIVE) throw new BadRequest('Cart is locked, cannot update cart')
 
         let cartItem = await CartItem.findOne({ cartId: cart._id, productId })
         if (!cartItem) throw new BadRequest('Product has not added to cart')
@@ -102,10 +100,9 @@ class CartService {
         return updated
     }
     static async getCartInfo({ userId }) {
-        const user = await getUserById(userId)
         if (!user) throw new BadRequest('User not found')
 
-        const cart = await Cart.findOne({ user: userId }).populate('cartItems').lean()
+        const cart = await Cart.findOne({ user: userId, status: Status.ACTIVE }).populate('cartItems').lean()
         if (!cart) throw new BadRequest('Cart empty')
         return cart
     }
@@ -116,16 +113,16 @@ class CartService {
         const product = await Product.findById(productId)
         if (!product) throw new BadRequest('Product not found')
 
-        const cart = await Cart.findOne({ user: userId })
+        const cart = await Cart.findOne({ user: userId, status: Status.ACTIVE })
         if (!cart) throw new BadRequest('Cart empty')
 
-        if (cart.discountCode) await CartService.removeDiscount({ userId, cartId: cart._id })
+        if (cart.status !== Status.ACTIVE) throw new BadRequest('Cart is locked, cannot update cart')
 
         const cartItem = await CartItem.findOne({ cartId: cart._id, productId })
         if (!cartItem) throw new BadRequest('Product has not added to cart')
 
         const totalSub = cartItem.quantity * cartItem.price
-        await Cart.updateOne({ _id: cart._id }, {
+        await Cart.updateOne({ _id: cart._id, status: Status.ACTIVE }, {
             $pull: { cartItems: cartItem._id },
             $inc: {
                 totalOrder: -totalSub,
@@ -135,47 +132,7 @@ class CartService {
         const deleted = await CartItem.deleteOne({ cartId: cart._id, productId })
         return deleted
     }
-    static async applyDiscountToCart({ discountCode, cartId }) {
-        const cart = await Cart.findOne({ _id: cartId }).populate('cartItems')
-        if (!cart || !cart.cartItems) throw new BadRequest('Cart empty')
 
-        const arrProducts = cart.cartItems.map(cartItem => ({
-            productId: cartItem.productId,
-            quantity: cartItem.quantity,
-            price: cartItem.price
-        }))
-        const { totalOrder, totalAmount, discountValue } = await DiscountService.applyDiscountToProduct({
-            code: discountCode,
-            products: arrProducts
-        })
-        cart.discountCode = discountCode
-        cart.discountValue = discountValue
-        cart.totalOrder = totalOrder
-        cart.totalAmount = totalAmount
-        await cart.save()
-
-        return {
-            totalOrder,
-            discountCode,
-            discountValue,
-            totalAmount
-        }
-    }
-    static async removeDiscount({ userId, cartId }) {
-        const user = await getUserById(userId)
-        if (!user) throw new BadRequest('User not found')
-
-        let cart = await Cart.findById(cartId)
-        if (!cart || !cart.cartItems) throw new BadRequest('Cart empty')
-
-        if (cart.discountCode) return await Cart.findByIdAndUpdate(cartId, {
-            $set: {
-                discountCode: null,
-                discountValue: 0,
-                totalAmount: cart.totalOrder
-            },
-        }, { new: true })
-    }
 }
 
 module.exports = CartService

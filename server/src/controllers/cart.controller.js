@@ -11,7 +11,7 @@ class CartController {
             })
         }).send(res)
     }
-    deleteCart = async (req, res) => {
+    async deleteCart(req, res) {
         new Success({
             message: 'Delete cart successfully',
             metadata: await CartService.deleteCart({
@@ -20,7 +20,7 @@ class CartController {
             })
         }).send(res)
     }
-    updateCart = async (req, res) => {
+    async updateCart(req, res) {
         new Success({
             message: 'Update cart successfully',
             metadata: await CartService.updateCart({
@@ -29,19 +29,13 @@ class CartController {
             })
         }).send(res)
     }
-    applyDiscountToCart = async (req, res) => {
-        new Success({
-            message: 'Apply discount code to cart successfully',
-            metadata: await CartService.applyDiscountToCart(req.body)
-        }).send(res)
-    }
-    getCartInfo = async (req, res) => {
+    async getCartInfo(req, res) {
         new Success({
             message: 'Get info cart successfully',
             metadata: await CartService.getCartInfo(req.user)
         }).send(res)
     }
-    removeCartItem = async (req, res) => {
+    async removeCartItem(req, res) {
         new Success({
             message: 'Remove cart item successfully',
             metadata: await CartService.removeCartItem({
@@ -50,22 +44,6 @@ class CartController {
             })
         }).send(res)
     }
-    removeDiscount = async (req, res) => {
-        new Success({
-            message: 'Remove discount cart successfully',
-            metadata: await CartService.removeDiscount({
-                userId: req.user.userId,
-                cartId: req.params.cartId
-            })
-        }).send(res)
-    }
-    // checkoutCart = async (req, res) => {
-    //     new Success({
-    //         message: 'Checkout cart successfully',
-    //         metadata: await CartService.checkoutCart(req.user.userId)
-    //     }).send(res)
-    // }
-
 }
 
 module.exports = new CartController()

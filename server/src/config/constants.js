@@ -3,19 +3,28 @@ require('dotenv/config')
 exports.env = {
     PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
+
     URL_SERVER: process.env.URL_SERVER,
     URL_CLIENT: process.env.URL_CLIENT,
+
     ACCESS_TOKEN: process.env.ACCESS_TOKEN_SECRET,
     REFRESH_TOKEN: process.env.REFRESH_TOKEN_SECRET,
     API_KEY: process.env.API_KEY_SECRET,
+
     MONGO_URI: process.env.MONGO_URI,
+
     CLOUDINARY_NAME: process.env.CLOUDINARY_NAME,
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+
     STRIPE_PUBLISH_KEY: process.env.STRIPE_PUBLISH_KEY,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+
+    VNP_TMN_CODE: process.env.VNP_TMN_CODE,
+    VNP_HASH_SECRET: process.env.VNP_HASH_SECRET,
 }
 
 exports.Headers = {
@@ -88,9 +97,17 @@ exports.Status = {
     DELETED: 'Deleted',
     BANNED: 'Banned',
     COMPLETED: 'Completed',
+    LOCKED: 'Locked',
+}
+
+exports.CartStatus = {
+    ACTIVE: 'Active',
+    COMPLETED: 'Completed',
+    LOCKED: 'Locked',
 }
 
 exports.OrderStatus = {
+    PENDING: 'Pending',
     CONFIRMED: 'Confirmed',
     PROCESSING: 'Processing',
     PACKED: 'Packed',

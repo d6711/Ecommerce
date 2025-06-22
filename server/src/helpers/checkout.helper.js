@@ -1,0 +1,40 @@
+const { env } = require("../config/constants")
+const { VNPay, ignoreLogger, ProductCode, VnpLocale, dateFormat } = require("vnpay")
+
+function vnPayment({ orderId }) {
+    const vnpay = new VNPay({
+        tmnCode: env.VNP_TMN_CODE,
+        secureSecret: env.VNP_HASH_SECRET,
+        vnpayHost: 'https://sandbox.vnpayment.vn',
+        queryDrAndRefundHost: 'https://sandbox.vnpayment.vn',
+        testMode: true,
+        hashAlgorithm: 'SHA512',
+        loggerFn: ignoreLogger,
+
+
+    })
+    const tomorrow = new Date()
+    tomorrow.setDate(tomorrow.getDate() + 1)
+
+    const paymentUrl = vnpay.buildPaymentUrl({
+        vnp_Amount: 10000,
+        vnp_IpAddr: '13.160.92.202',
+        vnp_TxnRef: orderId,
+        vnp_OrderInfo: `Thanh toan don hang ${orderId}`,
+        vnp_OrderType: ProductCode.Other,
+        vnp_ReturnUrl: 'http://localhost:3000/v1/api/checkout/vnpay-return',
+        vnp_Locale: VnpLocale.VN,
+        vnp_CreateDate: dateFormat(new Date()),
+        vnp_ExpireDate: dateFormat(tomorrow),
+    })
+
+    return { paymentUrl }
+}
+function momoPayment() { }
+function zaloPayment() { }
+
+module.exports = {
+    vnPayment,
+    momoPayment,
+    zaloPayment
+}
