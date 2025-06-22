@@ -7,7 +7,6 @@ const DiscountService = require("./discount.service")
 class CartService {
     static async calcTotalOrder({ userId }) {
         const cart = await Cart.findOne({ user: userId }).populate('cartItems').lean()
-        console.log(cart)
         const totalOrder = cart.cartItems.reduce((sum, item) => sum + item.quantity * item.price, 0)
         return await Cart.findOneAndUpdate(
             { user: userId },
@@ -23,9 +22,8 @@ class CartService {
         if (!user) throw new BadRequest('User not found')
 
         let cart = await Cart.findOne({ user: userId })
-        if (cart.discountCode) {
-            await CartService.removeDiscount({ userId, cartId: cart._id })
-        }
+        if (cart.discountCode) await CartService.removeDiscount({ userId, cartId: cart._id })
+
         if (!cart) cart = await Cart.create({ user: userId })
 
         let cartItem = await CartItem.findOneAndUpdate(
@@ -121,6 +119,8 @@ class CartService {
         const cart = await Cart.findOne({ user: userId })
         if (!cart) throw new BadRequest('Cart empty')
 
+        if (cart.discountCode) await CartService.removeDiscount({ userId, cartId: cart._id })
+
         const cartItem = await CartItem.findOne({ cartId: cart._id, productId })
         if (!cartItem) throw new BadRequest('Product has not added to cart')
 
@@ -144,7 +144,6 @@ class CartService {
             quantity: cartItem.quantity,
             price: cartItem.price
         }))
-        console.log(arrProducts)
         const { totalOrder, totalAmount, discountValue } = await DiscountService.applyDiscountToProduct({
             code: discountCode,
             products: arrProducts

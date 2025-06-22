@@ -8,7 +8,7 @@ const DiscountSchema = new Schema(
     {
         name: { type: String, required: true },
         description: { type: String, default: '' },
-        code: { type: String, required: true, unique: true, uppercase: true },
+        code: { type: String, required: true, uppercase: true },
         type: { type: String, enum: [DiscountType.PERCENT, DiscountType.FIXED], default: DiscountType.PERCENT },
         value: { type: Number, required: true, min: 0 },
         maxValue: { type: Number, min: 0 }, // apply percentage
@@ -33,7 +33,7 @@ const DiscountSchema = new Schema(
     }
 )
 
-DiscountSchema.index({ code: 1 })
+DiscountSchema.index({ code: 1 }, { unique: true })
 DiscountSchema.index({ code: 'text', name: 'text' })
 
 const Discount = model(DOCUMENT_NAME, DiscountSchema)

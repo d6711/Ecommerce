@@ -40,7 +40,9 @@ const CartItemSchema = new Schema(
 )
 
 CartSchema.index({ user: 1, status: 1 })
+CartSchema.index({ user: 1 })
 CartItemSchema.index({ cartId: 1 })
+CartItemSchema.index({ cartId: 1, productId: 1 })
 
 module.exports = {
     Cart: model(DOCUMENT_NAME, CartSchema),
