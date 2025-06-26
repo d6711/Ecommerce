@@ -12,10 +12,10 @@ class Database {
             mongoose.set('debug', true)
             await mongoose.connect(env.MONGO_URI, { maxPoolSize: 50 })
             console.log(
-                `✅ Connected MongoDb Success::${mongoose.connection.db.databaseName}`,
+                `Connected MongoDb Success::${mongoose.connection.db.databaseName}`,
             )
         } catch (error) {
-            console.error('❌ Disconnected MongoDb', error.message)
+            console.error('Disconnected MongoDb', error.message)
         }
     }
 }

@@ -1,5 +1,5 @@
 const { Success } = require('../core/success.response')
-const CheckoutService = require('../services/checkout.service')
+const CheckoutService = require('../services/checkout')
 
 class CheckoutController {
     async applyDiscount(req, res) {
@@ -20,13 +20,16 @@ class CheckoutController {
     async checkoutVnPay(req, res) {
         new Success({
             message: 'Checkout cart successfully',
-            metadata: await CheckoutService.checkoutVnPay()
+            metadata: await CheckoutService.checkout({
+                userId: req.user.userId,
+                ...req.body
+            })
         }).send(res)
     }
-    async returnVnpay(req, res) {
+    async responseVnPay(req, res) {
         new Success({
             message: 'Checkout cart successfully',
-            metadata: await CheckoutService.returnVnpay(req.query)
+            metadata: await CheckoutService.responseVnPay(req.query)
         }).send(res)
     }
 

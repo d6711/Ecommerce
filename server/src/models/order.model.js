@@ -4,7 +4,8 @@ const { OrderStatus, PaymentMethod } = require('../config/constants')
 const OrderSchema = new Schema(
     {
         user: { type: Types.ObjectId, ref: 'User', required: true },
-        itemsCount: { type: Number, required: true },
+        // itemsCount: { type: Number, required: true },
+        totalOrder: { type: Number, required: true, min: 0 },
         totalAmount: { type: Number, required: true, min: 0 },
         orderItems: [{ type: Types.ObjectId, ref: 'OrderItem', default: [] }],
         discountCode: { type: String, default: null },

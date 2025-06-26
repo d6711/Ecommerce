@@ -24,6 +24,7 @@ const CartSchema = new Schema(
     }
 )
 
+
 const CartItemSchema = new Schema(
     {
         cartId: { type: Types.ObjectId, ref: 'Cart' },

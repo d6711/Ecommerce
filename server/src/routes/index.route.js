@@ -8,6 +8,7 @@ router.use('/products', require('./product.route'))
 router.use('/discounts', require('./discount.route'))
 router.use('/cart', require('./cart.route'))
 router.use('/checkout', require('./checkout.route'))
+router.use('/order', require('./order.route'))
 router.use('/upload', require('./upload.route'))
 
 router.post('/seed', async (req, res) => {
