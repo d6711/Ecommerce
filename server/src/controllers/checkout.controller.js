@@ -17,7 +17,7 @@ class CheckoutController {
             })
         }).send(res)
     }
-    async checkoutVnPay(req, res) {
+    async checkout(req, res) {
         new Success({
             message: 'Checkout cart successfully',
             metadata: await CheckoutService.checkout({
@@ -32,8 +32,12 @@ class CheckoutController {
             metadata: await CheckoutService.responseVnPay(req.query)
         }).send(res)
     }
-
-
+    async responseMomo(req, res) {
+        new Success({
+            message: 'Checkout cart successfully',
+            metadata: await CheckoutService.responseMomo(req.query)
+        }).send(res)
+    }
 }
 
 module.exports = new CheckoutController()

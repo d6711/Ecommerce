@@ -112,6 +112,7 @@ exports.OrderStatus = {
     PROCESSING: 'Processing',
     PACKED: 'Packed',
     SHIPPED: 'Shipped',
+    PAID: 'Paid',
     DELIVERED: 'Delivered',
     RETURNED: 'Returned',
     CANCELLED: 'Cancelled',

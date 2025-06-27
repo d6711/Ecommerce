@@ -22,8 +22,7 @@ class CartService {
         if (!user) throw new BadRequest('User not found')
 
         let cart = await Cart.findOne({ user: userId, status: Status.ACTIVE })
-        if (cart.status !== Status.ACTIVE) throw new BadRequest('Cart is locked, cannot add to cart')
-
+        if (cart && cart.status !== Status.ACTIVE) throw new BadRequest('Cart is locked, cannot add to cart')
         if (!cart) cart = await Cart.create({ user: userId })
 
         let cartItem = await CartItem.findOneAndUpdate(

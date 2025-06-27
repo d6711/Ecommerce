@@ -1,5 +1,8 @@
 const { env } = require("../../config/constants")
 const { VNPay, ignoreLogger, ProductCode, VnpLocale, dateFormat } = require("vnpay")
+const { BadRequest } = require("../../core/error.exception")
+const axios = require('axios')
+const crypto = require('crypto')
 
 function vnPayment({ orderId, amount }) {
     const vnpay = new VNPay({
@@ -28,7 +31,75 @@ function vnPayment({ orderId, amount }) {
 
     return { paymentUrl }
 }
-function momoPayment() { }
+async function momoPayment({ orderId, amount }) {
+    const momoConfig = {
+        partnerCode: "MOMO",
+        accessKey: "F8BBA842ECF85",
+        secretKey: "K951B6PE1waDMi640xX08PD3vg6EkVlz",
+        endpoint: 'https://test-payment.momo.vn/v2/gateway/api/create',
+        redirectUrl: "http://localhost:3000/v1/api/checkout/momo/callback",
+        ipnUrl: "http://localhost:3000/v1/api/checkout/momo/ipn"
+    }
+
+    const { partnerCode, accessKey, secretKey, redirectUrl, ipnUrl } = momoConfig
+    const requestId = Date.now().toString()
+    const orderInfo = `Thanh toán đơn hàng ${orderId}`
+    const requestType = "captureWallet"
+    const extraData = ''
+
+    const rawSignature = `accessKey=${accessKey}` +
+        `&amount=${amount}` +
+        `&extraData=${extraData}` +
+        `&ipnUrl=${ipnUrl}` +
+        `&orderId=${orderId}` +
+        `&orderInfo=${orderInfo}` +
+        `&partnerCode=${partnerCode}` +
+        `&redirectUrl=${redirectUrl}` +
+        `&requestId=${requestId}` +
+        `&requestType=${requestType}`
+
+    const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex')
+    const requestBody = {
+        partnerCode,
+        accessKey,
+        requestId,
+        amount,
+        orderId,
+        orderInfo,
+        redirectUrl,
+        ipnUrl,
+        extraData,
+        requestType,
+        signature,
+        lang: 'vi'
+    }
+
+
+    try {
+        const response = await axios.post(momoConfig.endpoint, requestBody, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        const data = response.data
+
+        if (data.resultCode !== 0) {
+            throw new BadRequest(`Momo Error: ${data.message || 'Thanh toán thất bại'} (code ${data.resultCode})`)
+        }
+        return {
+            payUrl: data.payUrl,               // URL để redirect người dùng
+            qrCodeUrl: data.qrCodeUrl || null, // Có thể có với một số loại thanh toán
+            deeplink: data.deeplink || null,   // Dành cho mobile app
+            transId: data.transId,
+            orderId: data.orderId,
+            message: data.message,
+            requestId: data.requestId
+        }
+    } catch (error) {
+        throw new BadRequest('Failed checkout', error.message)
+    }
+}
+
 function zaloPayment() { }
 
 module.exports = {

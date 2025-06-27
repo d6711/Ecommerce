@@ -6,6 +6,7 @@ const { Order, OrderItem } = require("../../models/order.model")
 const CartService = require("../cart.service")
 const DiscountService = require("../discount.service")
 const { vnPayment, momoPayment } = require("./paymentMethod")
+const crypto = require('crypto')
 
 class CheckoutService {
     static async applyDiscount({ discountCode, cartId }) {
@@ -90,18 +91,70 @@ class CheckoutService {
             case PaymentMethod.VNPAY:
                 return vnPayment({ orderId: newOrder._id, amount: newOrder.totalAmount })
             case PaymentMethod.MOMO:
-                return momoPayment()
+                return await momoPayment({ orderId: newOrder._id, amount: newOrder.totalAmount })
             default:
                 throw new BadRequest('Invalid method')
         }
     }
     static async responseVnPay(query) {
-        if (query.vnp_ResponseCode !== 0) throw new BadRequest('Failed to checkout order')
+        const orderId = query.vnp_TxnRef
+        if (query.vnp_ResponseCode !== '00') {
+            await Order.updateOne({ _id: orderId }, { status: OrderStatus.FAILED })
+            throw new BadRequest(`Failed to checkout, error response: ${query.vnp_ResponseCode}`)
+        }
+        await Order.updateOne({ _id: orderId }, { status: OrderStatus.PAID })
         return {
             orderInfo: query.vnp_OrderInfo,
-            total: query.vnp_Amount,
+            total: parseInt(query.vnp_Amount, 10) / 100,
             bankCode: query.vnp_BankCode,
             cardType: query.vnp_CardType,
+        }
+    }
+    static async responseMomo(query) {
+        const {
+            partnerCode,
+            orderId,
+            orderInfo,
+            requestId,
+            amount,
+            resultCode,
+            extraData,
+            signature
+        } = query
+        console.log(query)
+
+        const momoConfig = {
+            partnerCode: "MOMO",
+            accessKey: "F8BBA842ECF85",
+            secretKey: "K951B6PE1waDMi640xX08PD3vg6EkVlz",
+            redirectUrl: "http://localhost:3000/v1/api/checkout/momo/callback",
+            ipnUrl: "http://localhost:3000/v1/api/checkout/momo/ipn",
+            requestType: "captureWallet"
+        }
+
+        const rawSignature = `accessKey=${momoConfig.accessKey}` +
+            `&amount=${amount}` +
+            `&extraData=${extraData}` +
+            `&ipnUrl=${momoConfig.ipnUrl}` +
+            `&orderId=${orderId}` +
+            `&orderInfo=${orderInfo}` +
+            `&partnerCode=${partnerCode}` +
+            `&redirectUrl=${momoConfig.redirectUrl}` +
+            `&requestId=${requestId}` +
+            `&requestType=${momoConfig.requestType}`
+
+        const expectedSignature = crypto
+            .createHmac('sha256', momoConfig.secretKey)
+            .update(rawSignature)
+            .digest('hex')
+
+        if (signature !== expectedSignature) {
+            throw new BadRequest('Momo signature verification failed')
+        }
+        if (resultCode === 0) {
+            return { orderId, resultCode, amount }
+        } else {
+            throw new BadRequest('Failed to checkout')
         }
     }
 }
