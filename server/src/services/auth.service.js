@@ -93,7 +93,7 @@ class AuthService {
     static logout = async (userId) => {
         return await KeyTokenService.deleteKeyTokenByUserId(userId)
     }
-    static forgotPasswordV2 = async ({ email }) => {
+    static forgotPasswordByOTP = async ({ email }) => {
         const user = await User.findOne({ email })
         if (!user) throw new BadRequest('User not found')
 
@@ -134,7 +134,7 @@ class AuthService {
         await User.updateOne({ _id: user._id }, { password: passwordHashed })
         return
     }
-    static signUpV2 = async ({ email, name, password }) => {
+    static signUpByLink = async ({ email, name, password }) => {
         let user = await User.findOne({ email })
         if (user) throw new BadRequest('User already exists')
 
@@ -180,7 +180,7 @@ class AuthService {
         await user.save()
         return
     }
-    static async forgotPassword({ email }) {
+    static async forgotPasswordByLink({ email }) {
         const user = await User.findOne({ email })
         if (!user) throw new BadRequest('User not registered')
 

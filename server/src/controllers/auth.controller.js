@@ -14,10 +14,10 @@ class AuthController {
             metadata: await AuthService.verifyEmailByOTP(req.body)
         }).send(res)
     }
-    async registerV2(req, res) {
+    async signUpByLink(req, res) {
         new Success({
             message: 'Check verify link sent to your email',
-            metadata: await AuthService.signUpV2(req.body)
+            metadata: await AuthService.signUpByLink(req.body)
         }).send(res)
     }
     async verifyEmailLink(req, res) {
@@ -47,10 +47,10 @@ class AuthController {
             })
         }).send(res)
     }
-    async forgotPassword(req, res) {
+    async forgotPasswordByLink(req, res) {
         new Success({
             message: 'Check verify link sent to your email',
-            metadata: await AuthService.forgotPassword(req.body)
+            metadata: await AuthService.forgotPasswordByLink(req.body)
         }).send(res)
     }
     async resetPasswordByLink(req, res) {
@@ -62,10 +62,10 @@ class AuthController {
             })
         }).send(res)
     }
-    async forgotPasswordV2(req, res) {
+    async forgotPasswordByOTP(req, res) {
         new Success({
             message: 'Check verify code sent to your email',
-            metadata: await AuthService.forgotPasswordV2(req.body)
+            metadata: await AuthService.forgotPasswordByOTP(req.body)
         }).send(res)
     }
     async resetPasswordByOtp(req, res) {
@@ -76,7 +76,7 @@ class AuthController {
     }
     async changePassword(req, res) {
         new Success({
-            message: 'Reset password success, you can login now',
+            message: 'Change password successfully',
             metadata: await AuthService.changePassword({
                 email: req.user.email,
                 ...req.body

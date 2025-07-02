@@ -5,7 +5,7 @@ const { Cart } = require("../../models/cart.model")
 const { Order, OrderItem } = require("../../models/order.model")
 const CartService = require("../cart.service")
 const DiscountService = require("../discount.service")
-const { vnPayment, momoPayment } = require("./paymentMethod")
+const { vnPayment, momoPayment } = require("./method.service")
 const crypto = require('crypto')
 
 class CheckoutService {
@@ -147,7 +147,7 @@ class CheckoutService {
             .createHmac('sha256', momoConfig.secretKey)
             .update(rawSignature)
             .digest('hex')
-
+        console.log('return', rawSignature)
         if (signature !== expectedSignature) {
             throw new BadRequest('Momo signature verification failed')
         }

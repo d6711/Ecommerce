@@ -59,6 +59,7 @@ async function momoPayment({ orderId, amount }) {
         `&requestType=${requestType}`
 
     const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex')
+    console.log(rawSignature)
     const requestBody = {
         partnerCode,
         accessKey,
