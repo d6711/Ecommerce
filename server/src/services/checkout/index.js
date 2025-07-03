@@ -89,9 +89,9 @@ class CheckoutService {
         await CartService.deleteCart({ cartId, userId })
         switch (method) {
             case PaymentMethod.VNPAY:
-                return vnPayment({ orderId: newOrder._id, amount: newOrder.totalAmount })
+                return vnPayment({ orderId: newOrder._id.toString(), amount: newOrder.totalAmount.toString() })
             case PaymentMethod.MOMO:
-                return await momoPayment({ orderId: newOrder._id, amount: newOrder.totalAmount })
+                return await momoPayment({ orderId: newOrder._id.toString(), amount: newOrder.totalAmount.toString() })
             default:
                 throw new BadRequest('Invalid method')
         }
@@ -121,41 +121,34 @@ class CheckoutService {
             extraData,
             signature
         } = query
-        console.log(query)
 
         const momoConfig = {
-            partnerCode: "MOMO",
             accessKey: "F8BBA842ECF85",
             secretKey: "K951B6PE1waDMi640xX08PD3vg6EkVlz",
             redirectUrl: "http://localhost:3000/v1/api/checkout/momo/callback",
             ipnUrl: "http://localhost:3000/v1/api/checkout/momo/ipn",
-            requestType: "captureWallet"
+            requestType: "payWithMethod",
         }
-
-        const rawSignature = `accessKey=${momoConfig.accessKey}` +
+        const { accessKey, redirectUrl, ipnUrl, secretKey, requestType } = momoConfig
+        const rawSignature = `accessKey=${accessKey}` +
             `&amount=${amount}` +
             `&extraData=${extraData}` +
-            `&ipnUrl=${momoConfig.ipnUrl}` +
+            `&ipnUrl=${ipnUrl}` +
             `&orderId=${orderId}` +
             `&orderInfo=${orderInfo}` +
             `&partnerCode=${partnerCode}` +
-            `&redirectUrl=${momoConfig.redirectUrl}` +
+            `&redirectUrl=${redirectUrl}` +
             `&requestId=${requestId}` +
-            `&requestType=${momoConfig.requestType}`
+            `&requestType=${requestType}`
 
         const expectedSignature = crypto
-            .createHmac('sha256', momoConfig.secretKey)
+            .createHmac('sha256', secretKey)
             .update(rawSignature)
             .digest('hex')
-        console.log('return', rawSignature)
-        if (signature !== expectedSignature) {
-            throw new BadRequest('Momo signature verification failed')
-        }
-        if (resultCode === 0) {
-            return { orderId, resultCode, amount }
-        } else {
-            throw new BadRequest('Failed to checkout')
-        }
+
+        if (signature !== expectedSignature) throw new BadRequest('Signature verification failed')
+        if (resultCode === '0') return { orderId, resultCode, amount }
+        else throw new BadRequest('Failed to checkout')
     }
 }
 

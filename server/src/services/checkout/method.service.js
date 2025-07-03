@@ -31,6 +31,7 @@ function vnPayment({ orderId, amount }) {
 
     return { paymentUrl }
 }
+
 async function momoPayment({ orderId, amount }) {
     const momoConfig = {
         partnerCode: "MOMO",
@@ -41,11 +42,13 @@ async function momoPayment({ orderId, amount }) {
         ipnUrl: "http://localhost:3000/v1/api/checkout/momo/ipn"
     }
 
-    const { partnerCode, accessKey, secretKey, redirectUrl, ipnUrl } = momoConfig
+    const { partnerCode, accessKey, secretKey, redirectUrl, ipnUrl, endpoint } = momoConfig
     const requestId = Date.now().toString()
-    const orderInfo = `Thanh toán đơn hàng ${orderId}`
-    const requestType = "captureWallet"
+    const orderInfo = orderId
+    const requestType = "payWithMethod"
     const extraData = ''
+    const autoCapture = true
+    const lang = 'vi'
 
     const rawSignature = `accessKey=${accessKey}` +
         `&amount=${amount}` +
@@ -58,46 +61,31 @@ async function momoPayment({ orderId, amount }) {
         `&requestId=${requestId}` +
         `&requestType=${requestType}`
 
-    const signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex')
-    console.log(rawSignature)
+    const signature = crypto
+        .createHmac('sha256', secretKey)
+        .update(rawSignature)
+        .digest('hex')
+
     const requestBody = {
-        partnerCode,
-        accessKey,
-        requestId,
-        amount,
-        orderId,
-        orderInfo,
-        redirectUrl,
-        ipnUrl,
-        extraData,
-        requestType,
-        signature,
-        lang: 'vi'
+        partnerCode, accessKey, requestId,
+        amount, orderId, orderInfo,
+        redirectUrl, ipnUrl, autoCapture,
+        extraData, requestType, signature, lang
     }
 
-
     try {
-        const response = await axios.post(momoConfig.endpoint, requestBody, {
+        const response = await axios.post(endpoint, requestBody, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
         const data = response.data
-
         if (data.resultCode !== 0) {
             throw new BadRequest(`Momo Error: ${data.message || 'Thanh toán thất bại'} (code ${data.resultCode})`)
         }
-        return {
-            payUrl: data.payUrl,               // URL để redirect người dùng
-            qrCodeUrl: data.qrCodeUrl || null, // Có thể có với một số loại thanh toán
-            deeplink: data.deeplink || null,   // Dành cho mobile app
-            transId: data.transId,
-            orderId: data.orderId,
-            message: data.message,
-            requestId: data.requestId
-        }
+        return { payUrl: data.payUrl }
     } catch (error) {
-        throw new BadRequest('Failed checkout', error.message)
+        throw new BadRequest(`Failed to checkout: ${error.message}`)
     }
 }
 
