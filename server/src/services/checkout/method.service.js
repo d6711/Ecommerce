@@ -66,6 +66,8 @@ async function momoPayment({ orderId, amount }) {
         .update(rawSignature)
         .digest('hex')
 
+    console.log('raw1', rawSignature)
+    console.log('sig1', signature)
     const requestBody = {
         partnerCode, accessKey, requestId,
         amount, orderId, orderInfo,
@@ -80,9 +82,7 @@ async function momoPayment({ orderId, amount }) {
             }
         })
         const data = response.data
-        if (data.resultCode !== 0) {
-            throw new BadRequest(`Momo Error: ${data.message || 'Thanh toán thất bại'} (code ${data.resultCode})`)
-        }
+        if (data.resultCode !== 0) throw new BadRequest(`Momo Error: ${data.message || 'Thanh toán thất bại'} (code ${data.resultCode})`)
         return { payUrl: data.payUrl }
     } catch (error) {
         throw new BadRequest(`Failed to checkout: ${error.message}`)

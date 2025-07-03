@@ -121,7 +121,7 @@ class CheckoutService {
             extraData,
             signature
         } = query
-
+        console.log(query)
         const momoConfig = {
             accessKey: "F8BBA842ECF85",
             secretKey: "K951B6PE1waDMi640xX08PD3vg6EkVlz",
@@ -145,6 +145,10 @@ class CheckoutService {
             .createHmac('sha256', secretKey)
             .update(rawSignature)
             .digest('hex')
+
+        console.log('raw', rawSignature)
+        console.log('exp', expectedSignature)
+        console.log('sig', signature)
 
         if (signature !== expectedSignature) throw new BadRequest('Signature verification failed')
         if (resultCode === '0') return { orderId, resultCode, amount }

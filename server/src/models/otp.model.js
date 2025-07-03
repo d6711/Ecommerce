@@ -1,4 +1,4 @@
-const { Status, VerifyType } = require('../config/constants')
+const { VerifyType } = require('../config/constants')
 const { Schema, Types, model } = require('mongoose')
 
 const DOCUMENT_NAME = 'Otp'
