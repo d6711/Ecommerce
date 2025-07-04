@@ -1,12 +1,12 @@
 const { VNPay, ignoreLogger, ProductCode, VnpLocale, dateFormat } = require("vnpay")
-const { env, OrderStatus } = require("../../../config/constants")
+const { OrderStatus } = require("../../../config/constants")
 const { Order } = require("../../../models/order.model")
 const { BadRequest } = require("../../../core/error.exception")
 
 function createVnPay({ orderId, amount }) {
     const vnpay = new VNPay({
-        tmnCode: env.VNP_TMN_CODE,
-        secureSecret: env.VNP_HASH_SECRET,
+        tmnCode: 'G0LT2S19',
+        secureSecret: '33SSQ77UGZ3C9VGDOGJOBXRR8KNK5HIG',
         vnpayHost: 'https://sandbox.vnpayment.vn',
         queryDrAndRefundHost: 'https://sandbox.vnpayment.vn',
         testMode: true,

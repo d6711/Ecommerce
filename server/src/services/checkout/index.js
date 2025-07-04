@@ -92,6 +92,8 @@ class CheckoutService {
                 return createVnPay({ orderId: newOrder._id.toString(), amount: newOrder.totalAmount.toString() })
             case PaymentMethod.MOMO:
                 return await createMomo({ orderId: newOrder._id.toString(), amount: newOrder.totalAmount.toString() })
+            case PaymentMethod.COD:
+                return
             default:
                 throw new BadRequest('Invalid method')
         }

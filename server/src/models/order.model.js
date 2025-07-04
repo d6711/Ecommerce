@@ -21,7 +21,15 @@ const OrderSchema = new Schema(
             enum: Object.values(PaymentMethod),
             default: PaymentMethod.COD
         },
-        shippingAddress: { type: String, required: true },
+        shippingAddress: {
+            fullName: String,
+            phone: String,
+            street: String,
+            ward: String,
+            district: String,
+            city: String,
+            country: String
+        },
     },
     {
         timestamps: true,

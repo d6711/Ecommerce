@@ -18,6 +18,8 @@ import {
     DialogActions,
     TextField,
     MenuItem,
+    IconButton,
+    Tooltip,
 } from '@mui/material'
 import {
     getCategories,
@@ -28,6 +30,7 @@ import {
 } from '@services/categoryService'
 import { uploadImage } from '@services/uploadService'
 import { ToastContext } from '@context/ToastContext'
+import { Delete, Edit, Visibility } from '@mui/icons-material'
 
 const CategoryPage = () => {
     const [categories, setCategories] = useState([])
@@ -35,6 +38,7 @@ const CategoryPage = () => {
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(0)
     const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [viewCategory, setViewCategory] = useState(null)
 
     const [openModal, setOpenModal] = useState(false)
     const [editMode, setEditMode] = useState(false)
@@ -141,6 +145,13 @@ const CategoryPage = () => {
             setConfirmDelete({ open: false, category: null })
         }
     }
+    const openViewModal = (category) => {
+        setViewCategory(category)
+    }
+
+    const closeViewModal = () => {
+        setViewCategory(null)
+    }
 
     return (
         <Paper sx={{ padding: 2 }}>
@@ -155,42 +166,56 @@ const CategoryPage = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
+                            <TableCell>STT</TableCell>
                             <TableCell>Ảnh</TableCell>
                             <TableCell>Tên</TableCell>
-                            <TableCell>Slug</TableCell>
+                            {/* <TableCell>Slug</TableCell> */}
                             <TableCell>Mô tả</TableCell>
-                            <TableCell>Trạng thái</TableCell>
+                            {/* <TableCell>Trạng thái</TableCell> */}
                             <TableCell>Hành động</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {categories.map((cat) => (
+                        {categories.map((cat, index) => (
                             <TableRow key={cat._id}>
+                                <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                                 <TableCell>
                                     <Avatar variant="rounded" src={cat.image} alt={cat.name} />
                                 </TableCell>
                                 <TableCell>{cat.name}</TableCell>
-                                <TableCell>{cat.slug}</TableCell>
+                                {/* <TableCell>{cat.slug}</TableCell> */}
                                 <TableCell>{cat.description}</TableCell>
-                                <TableCell>{cat.isActive ? 'Hoạt động' : 'Ẩn'}</TableCell>
+                                {/* <TableCell>{cat.isActive ? 'Hoạt động' : 'Ẩn'}</TableCell> */}
                                 <TableCell>
                                     <Box sx={{ display: 'flex', gap: 1 }}>
-                                        <Button
-                                            variant="contained"
-                                            color="warning"
-                                            onClick={() => openEditModal(cat)}
-                                        >
-                                            Sửa
-                                        </Button>
-                                        <Button
-                                            variant="contained"
-                                            color="error"
-                                            onClick={() =>
-                                                setConfirmDelete({ open: true, category: cat })
-                                            }
-                                        >
-                                            Xóa
-                                        </Button>
+                                        <Tooltip title="Xem">
+                                            <IconButton
+                                                color="primary"
+                                                onClick={() => openViewModal(cat)}
+                                            >
+                                                <Visibility />
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        <Tooltip title="Sửa">
+                                            <IconButton
+                                                color="warning"
+                                                onClick={() => openEditModal(cat)}
+                                            >
+                                                <Edit />
+                                            </IconButton>
+                                        </Tooltip>
+
+                                        <Tooltip title="Xóa">
+                                            <IconButton
+                                                color="error"
+                                                onClick={() =>
+                                                    setConfirmDelete({ open: true, category: cat })
+                                                }
+                                            >
+                                                <Delete />
+                                            </IconButton>
+                                        </Tooltip>
                                     </Box>
                                 </TableCell>
                             </TableRow>
@@ -288,6 +313,40 @@ const CategoryPage = () => {
                     <Button variant="contained" color="error" onClick={handleDelete}>
                         Xác nhận
                     </Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog open={!!viewCategory} onClose={closeViewModal} fullWidth maxWidth="sm">
+                <DialogTitle>Chi tiết danh mục</DialogTitle>
+                <DialogContent dividers>
+                    {viewCategory && (
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                            <Avatar
+                                variant="rounded"
+                                src={viewCategory.image}
+                                alt={viewCategory.name}
+                                sx={{ width: 120, height: 120 }}
+                            />
+                            <Typography>
+                                <strong>Tên:</strong> {viewCategory.name}
+                            </Typography>
+                            <Typography>
+                                <strong>Slug:</strong> {viewCategory.slug}
+                            </Typography>
+                            <Typography>
+                                <strong>Mô tả:</strong> {viewCategory.description}
+                            </Typography>
+                            <Typography>
+                                <strong>Trạng thái:</strong>{' '}
+                                {viewCategory.isActive ? 'Hoạt động' : 'Ẩn'}
+                            </Typography>
+                            <Typography>
+                                <strong>Danh mục cha:</strong> {viewCategory.parentId || 'Không có'}
+                            </Typography>
+                        </Box>
+                    )}
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={closeViewModal}>Đóng</Button>
                 </DialogActions>
             </Dialog>
         </Paper>

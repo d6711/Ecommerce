@@ -16,15 +16,15 @@ import { NavLink } from 'react-router-dom'
 const SideBar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true)
     const menuItems = [
-        { text: 'Dashboard', icon: Home, path: '/' },
-        { text: 'Users', icon: Users, path: '/users' },
-        { text: 'Orders', icon: ShoppingCart, path: '/orders' },
-        { text: 'Category', icon: BarChart3, path: '/categories' },
-        { text: 'Product', icon: Layers, path: '/products' },
-        { text: 'Inventory', icon: Warehouse, path: '/inventories' },
-        { text: 'Customer', icon: Users, path: '/customers' },
-        { text: 'News', icon: ChartBarStacked, path: '/news' },
-        { text: 'Settings', icon: Settings, path: '/settings' },
+        { text: 'Trang chủ', icon: Home, path: '/' },
+        { text: 'Nhân viên', icon: Users, path: '/users' },
+        { text: 'Đơn hàng', icon: ShoppingCart, path: '/orders' },
+        { text: 'Danh mục sản phẩm', icon: BarChart3, path: '/categories' },
+        { text: 'Sản phẩm', icon: Layers, path: '/products' },
+        { text: 'Kho hàng', icon: Warehouse, path: '/inventories' },
+        { text: 'Khách hàng', icon: Users, path: '/customers' },
+        { text: 'Bài viết', icon: ChartBarStacked, path: '/news' },
+        { text: 'Cài đặt', icon: Settings, path: '/settings' },
     ]
     return (
         <div

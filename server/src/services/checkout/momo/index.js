@@ -1,6 +1,8 @@
 const { BadRequest } = require("../../../core/error.exception")
 const crypto = require('crypto')
 const axios = require('axios')
+const { Order } = require("../../../models/order.model")
+const { OrderStatus } = require("../../../config/constants")
 
 const momoConfig = {
     partnerCode: "MOMO",
@@ -58,14 +60,13 @@ async function createMomo({ orderId, amount }) {
     }
 }
 
-function callbackMomo(query) {
+async function callbackMomo(query) {
     const {
         partnerCode, requestId, amount,
         orderId, orderInfo, orderType, transId,
         resultCode, message, payType, responseTime,
         extraData, signature
     } = query
-
 
     const rawSignature = [
         `accessKey=${momoConfig.accessKey}`,
@@ -85,8 +86,14 @@ function callbackMomo(query) {
 
     const expectedSignature = generateSignature(momoConfig.secretKey, rawSignature)
     if (signature !== expectedSignature) throw new BadRequest('Signature verification failed')
-    if (resultCode === '0' || resultCode === 0) return { orderId, resultCode, amount }
-    throw new BadRequest(`Payment failed with resultCode ${resultCode}`)
+    if (resultCode === '0' || resultCode === 0) {
+        await Order.updateOne({ status: OrderStatus.PAID })
+        return { orderId, resultCode, amount }
+    } else {
+        await Order.updateOne({ status: OrderStatus.FAILED })
+        throw new BadRequest(`Payment failed with resultCode ${resultCode}`)
+    }
+
 }
 
 module.exports = { createMomo, callbackMomo }

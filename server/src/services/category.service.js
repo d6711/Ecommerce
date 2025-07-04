@@ -39,7 +39,7 @@ class CategoryService {
     }
     // Lấy danh sách danh mục cha
     static async getCategoryParent() {
-        return await Category.find({ parentId: null })
+        return await Category.find({ parentId: null }).lean()
     }
     // Lấy danh sách danh mục con bằng parentId
     static async getCategoryByParentId(parentId) {

@@ -19,12 +19,6 @@ exports.env = {
 
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
-
-    STRIPE_PUBLISH_KEY: process.env.STRIPE_PUBLISH_KEY,
-    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
-
-    VNP_TMN_CODE: process.env.VNP_TMN_CODE,
-    VNP_HASH_SECRET: process.env.VNP_HASH_SECRET,
 }
 
 exports.Headers = {
@@ -130,8 +124,6 @@ exports.StockStatus = {
 
 exports.PaymentMethod = {
     COD: 'COD',
-    CASH: 'Cash',
-    CREDIT_CARD: 'Credit Card',
     PAYPAL: 'PayPal',
     BANK_TRANSFER: 'Bank Transfer',
     MOMO: 'Momo',

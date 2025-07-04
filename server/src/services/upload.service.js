@@ -25,6 +25,7 @@ async function uploadImageFromLocal(file) {
         thumbUrl: await cloudinary.url(result.public_id, {
             height: 100,
             width: 100,
+            crop: 'fill',
             format: 'jpg'
         })
     }
