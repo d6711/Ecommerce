@@ -108,12 +108,12 @@ exports.CartStatus = {
 
 exports.OrderStatus = {
     PENDING: 'Pending',
+    PAID: 'Paid',
+    SHIPPED: 'Shipped',
+    DELIVERED: 'Delivered',
+    PACKED: 'Packed',
     CONFIRMED: 'Confirmed',
     PROCESSING: 'Processing',
-    PACKED: 'Packed',
-    SHIPPED: 'Shipped',
-    PAID: 'Paid',
-    DELIVERED: 'Delivered',
     RETURNED: 'Returned',
     CANCELLED: 'Cancelled',
     COMPLETED: 'Completed',

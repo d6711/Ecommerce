@@ -1,5 +1,7 @@
 const { Success } = require('../core/success.response')
 const CheckoutService = require('../services/checkout')
+const { callbackMomo } = require('../services/checkout/momo')
+const { callbackVnPay } = require('../services/checkout/vnpay')
 
 class CheckoutController {
     async applyDiscount(req, res) {
@@ -26,16 +28,16 @@ class CheckoutController {
             })
         }).send(res)
     }
-    async responseVnPay(req, res) {
+    async callbackVnPay(req, res) {
         new Success({
             message: 'Checkout cart successfully',
-            metadata: await CheckoutService.responseVnPay(req.query)
+            metadata: await callbackVnPay(req.query)
         }).send(res)
     }
-    async responseMomo(req, res) {
+    async callbackMomo(req, res) {
         new Success({
             message: 'Checkout cart successfully',
-            metadata: await CheckoutService.responseMomo(req.query)
+            metadata: await callbackMomo(req.query)
         }).send(res)
     }
 }

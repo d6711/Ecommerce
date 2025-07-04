@@ -1,12 +1,12 @@
-const { Status, env, PaymentMethod, OrderStatus } = require("../../config/constants")
+const { Status, PaymentMethod, OrderStatus } = require("../../config/constants")
 const { BadRequest } = require("../../core/error.exception")
 const { getUserById } = require("../../helpers/auth.helper")
 const { Cart } = require("../../models/cart.model")
 const { Order, OrderItem } = require("../../models/order.model")
 const CartService = require("../cart.service")
 const DiscountService = require("../discount.service")
-const { vnPayment, momoPayment } = require("./method.service")
-const crypto = require('crypto')
+const { createMomo } = require("./momo")
+const { createVnPay } = require("./vnpay")
 
 class CheckoutService {
     static async applyDiscount({ discountCode, cartId }) {
@@ -89,70 +89,12 @@ class CheckoutService {
         await CartService.deleteCart({ cartId, userId })
         switch (method) {
             case PaymentMethod.VNPAY:
-                return vnPayment({ orderId: newOrder._id.toString(), amount: newOrder.totalAmount.toString() })
+                return createVnPay({ orderId: newOrder._id.toString(), amount: newOrder.totalAmount.toString() })
             case PaymentMethod.MOMO:
-                return await momoPayment({ orderId: newOrder._id.toString(), amount: newOrder.totalAmount.toString() })
+                return await createMomo({ orderId: newOrder._id.toString(), amount: newOrder.totalAmount.toString() })
             default:
                 throw new BadRequest('Invalid method')
         }
-    }
-    static async responseVnPay(query) {
-        const orderId = query.vnp_TxnRef
-        if (query.vnp_ResponseCode !== '00') {
-            await Order.updateOne({ _id: orderId }, { status: OrderStatus.FAILED })
-            throw new BadRequest(`Failed to checkout, error response: ${query.vnp_ResponseCode}`)
-        }
-        await Order.updateOne({ _id: orderId }, { status: OrderStatus.PAID })
-        return {
-            orderInfo: query.vnp_OrderInfo,
-            total: parseInt(query.vnp_Amount, 10) / 100,
-            bankCode: query.vnp_BankCode,
-            cardType: query.vnp_CardType,
-        }
-    }
-    static async responseMomo(query) {
-        const {
-            partnerCode,
-            orderId,
-            orderInfo,
-            requestId,
-            amount,
-            resultCode,
-            extraData,
-            signature
-        } = query
-        console.log(query)
-        const momoConfig = {
-            accessKey: "F8BBA842ECF85",
-            secretKey: "K951B6PE1waDMi640xX08PD3vg6EkVlz",
-            redirectUrl: "http://localhost:3000/v1/api/checkout/momo/callback",
-            ipnUrl: "http://localhost:3000/v1/api/checkout/momo/ipn",
-            requestType: "payWithMethod",
-        }
-        const { accessKey, redirectUrl, ipnUrl, secretKey, requestType } = momoConfig
-        const rawSignature = `accessKey=${accessKey}` +
-            `&amount=${amount}` +
-            `&extraData=${extraData}` +
-            `&ipnUrl=${ipnUrl}` +
-            `&orderId=${orderId}` +
-            `&orderInfo=${orderInfo}` +
-            `&partnerCode=${partnerCode}` +
-            `&redirectUrl=${redirectUrl}` +
-            `&requestId=${requestId}` +
-            `&requestType=${requestType}`
-
-        const expectedSignature = crypto
-            .createHmac('sha256', secretKey)
-            .update(rawSignature)
-            .digest('hex')
-
-        console.log('raw', rawSignature)
-        console.log('exp', expectedSignature)
-        console.log('sig', signature)
-
-        if (signature !== expectedSignature) throw new BadRequest('Signature verification failed')
-        if (resultCode === '0') return { orderId, resultCode, amount }
-        else throw new BadRequest('Failed to checkout')
     }
 }
 
