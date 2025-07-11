@@ -37,7 +37,7 @@ const CategoryPage = () => {
     const [parentCategories, setParentCategories] = useState([])
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(0)
-    const [rowsPerPage, setRowsPerPage] = useState(5)
+    const [rowsPerPage, setRowsPerPage] = useState(10)
     const [viewCategory, setViewCategory] = useState(null)
 
     const [openModal, setOpenModal] = useState(false)
@@ -73,31 +73,26 @@ const CategoryPage = () => {
         }
     }
 
-    useEffect(() => {
-        fetchCategories(page, rowsPerPage)
-        fetchParentCategories()
-    }, [page, rowsPerPage])
-
     const handleChangePage = (_, newPage) => setPage(newPage)
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10))
         setPage(0)
     }
 
-    const openAddModal = () => {
+    const openAddModal = async () => {
         setEditMode(false)
         setForm({ name: '', description: '', image: '', parentId: '' })
         setOpenModal(true)
     }
 
-    const openEditModal = (category) => {
+    const openEditModal = async (category) => {
         setEditMode(true)
         setSelectedCategory(category)
         setForm({
             name: category.name,
             description: category.description,
             image: category.image,
-            parentId: category.parentId || '',
+            parentId: category.parentId?._id || null,
         })
         setOpenModal(true)
     }
@@ -152,7 +147,13 @@ const CategoryPage = () => {
     const closeViewModal = () => {
         setViewCategory(null)
     }
+    useEffect(() => {
+        fetchCategories(page, rowsPerPage)
+    }, [page, rowsPerPage])
 
+    useEffect(() => {
+        fetchParentCategories()
+    }, [])
     return (
         <Paper sx={{ padding: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
@@ -171,6 +172,7 @@ const CategoryPage = () => {
                             <TableCell>Tên</TableCell>
                             {/* <TableCell>Slug</TableCell> */}
                             <TableCell>Mô tả</TableCell>
+                            <TableCell>Danh mục cha</TableCell>
                             {/* <TableCell>Trạng thái</TableCell> */}
                             <TableCell>Hành động</TableCell>
                         </TableRow>
@@ -185,6 +187,7 @@ const CategoryPage = () => {
                                 <TableCell>{cat.name}</TableCell>
                                 {/* <TableCell>{cat.slug}</TableCell> */}
                                 <TableCell>{cat.description}</TableCell>
+                                <TableCell>{cat.parentId?.name || 'Không có'}</TableCell>
                                 {/* <TableCell>{cat.isActive ? 'Hoạt động' : 'Ẩn'}</TableCell> */}
                                 <TableCell>
                                     <Box sx={{ display: 'flex', gap: 1 }}>
@@ -260,7 +263,7 @@ const CategoryPage = () => {
                         fullWidth
                         label="Danh mục cha"
                         value={form.parentId}
-                        onChange={(e) => setForm({ ...form, parentId: e.target.value })}
+                        onChange={(e) => setForm({ ...form, parentId: e.target.value || null })}
                         margin="normal"
                     >
                         <MenuItem value="">-- Không có --</MenuItem>
@@ -340,7 +343,8 @@ const CategoryPage = () => {
                                 {viewCategory.isActive ? 'Hoạt động' : 'Ẩn'}
                             </Typography>
                             <Typography>
-                                <strong>Danh mục cha:</strong> {viewCategory.parentId || 'Không có'}
+                                <strong>Danh mục cha:</strong>{' '}
+                                {viewCategory.parentId?.name || 'Không có'}
                             </Typography>
                         </Box>
                     )}

@@ -9,7 +9,8 @@ async function pagination({
     limit = 10,
     sortBy = 'createdAt',
     order = 'desc',
-    select = '-__v -createdAt -updatedAt'
+    select = '-__v -createdAt -updatedAt',
+    populate = null
 }) {
     try {
         page = Math.max(1, parseInt(page) || 1)
@@ -18,7 +19,9 @@ async function pagination({
         if (!['asc', 'desc'].includes(order)) throw new BadRequest('Order must be asc or desc')
 
         const query = { ...filter }
-        if (search && search.trim()) {
+
+        // Search full text hoặc regex
+        if (search.trim()) {
             if (searchFields.length > 0) {
                 query.$or = searchFields.map(field => ({
                     [field]: { $regex: search.trim(), $options: 'i' }
@@ -31,13 +34,18 @@ async function pagination({
         const skip = (page - 1) * limit
         const sortOption = { [sortBy]: order === "desc" ? -1 : 1 }
 
+        // Tạo query base
+        let mongooseQuery = model.find(query)
+            .sort(sortOption)
+            .select(select)
+            .skip(skip)
+            .limit(limit)
+
+        // Nếu có populate
+        if (populate) mongooseQuery = mongooseQuery.populate(populate)
+
         const [data, totalDocuments] = await Promise.all([
-            model.find(query)
-                .sort(sortOption)
-                .select(select)
-                .skip(skip)
-                .limit(limit)
-                .lean(),
+            mongooseQuery.lean(),
             model.countDocuments(query)
         ])
 

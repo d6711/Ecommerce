@@ -10,7 +10,6 @@ const createCategory = Joi.object({
 
 const updateCategory = Joi.object({
     name: Joi.string(),
-    parentId: Joi.string().length(24),
     image: Joi.string(),
     description: Joi.string(),
     isActive: Joi.boolean()

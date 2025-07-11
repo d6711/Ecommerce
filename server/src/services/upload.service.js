@@ -3,7 +3,7 @@ const cloudinary = require('../config/cloudinary')
 
 async function uploadImageFromUrl() {
     const urlImage = 'https://res.cloudinary.com/dbzy5jdmv/image/upload/v1745569038/cld-sample-3.jpg'
-    const folderName = 'EcommerceV2/images'
+    const folderName = 'Ecommerce/images'
     const newFileName = 'test001'
     const result = await cloudinary.uploader.upload(urlImage, {
         public_id: newFileName,
@@ -13,7 +13,7 @@ async function uploadImageFromUrl() {
 }
 
 async function uploadImageFromLocal(file) {
-    const folderName = 'EcommerceV2/images'
+    const folderName = 'Ecommerce/images'
     if (!file) throw new BadRequest('File not found')
     const result = await cloudinary.uploader.upload(file, {
         public_id: 'thumb',

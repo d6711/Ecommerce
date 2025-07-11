@@ -24,7 +24,8 @@ class CategoryService {
         return await pagination({
             model: Category,
             page, limit,
-            filter: { parentId: { $ne: null } }
+            filter: {},
+            populate: { path: 'parentId', select: 'name' }
         })
     }
     static async getCategoryById(id) {
