@@ -1,19 +1,6 @@
 import { ToastContext } from '@context/ToastContext'
 import { Delete, Edit, Visibility } from '@mui/icons-material'
-import {
-    Box,
-    Button,
-    IconButton,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Tooltip,
-    Typography,
-} from '@mui/material'
+import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
 import { getProducts } from '@services/productService'
 import React, { useContext, useEffect, useState } from 'react'
 
@@ -85,30 +72,17 @@ const ProductPage = () => {
                                 <TableCell>
                                     <Box sx={{ display: 'flex', gap: 1 }}>
                                         <Tooltip title="Xem">
-                                            <IconButton
-                                                color="primary"
-                                                onClick={() => openViewModal(cat)}
-                                            >
+                                            <IconButton color="primary" onClick={() => openViewModal(cat)}>
                                                 <Visibility />
                                             </IconButton>
                                         </Tooltip>
-
                                         <Tooltip title="Sửa">
-                                            <IconButton
-                                                color="warning"
-                                                onClick={() => openEditModal(cat)}
-                                            >
+                                            <IconButton color="warning" onClick={() => openEditModal(cat)}>
                                                 <Edit />
                                             </IconButton>
                                         </Tooltip>
-
                                         <Tooltip title="Xóa">
-                                            <IconButton
-                                                color="error"
-                                                onClick={() =>
-                                                    setConfirmDelete({ open: true, category: cat })
-                                                }
-                                            >
+                                            <IconButton color="error" onClick={() => setConfirmDelete({ open: true, category: cat })}>
                                                 <Delete />
                                             </IconButton>
                                         </Tooltip>
