@@ -11,6 +11,8 @@ router.use('/checkout', require('./checkout.route'))
 router.use('/order', require('./order.route'))
 router.use('/upload', require('./upload.route'))
 router.use('/review', require('./review.route'))
+router.use('/catalog', require('./catalog.route'))
+router.use('/news', require('./news.route'))
 
 router.post('/seed', async (req, res) => {
     return res.json({ data: await Product.insertMany(req.body) })
