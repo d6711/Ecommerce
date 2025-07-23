@@ -71,6 +71,7 @@ exports.HttpStatus = {
 exports.Roles = {
     SUPER_ADMIN: 'Super Admin',
     ADMIN: 'Admin',
+    SHOP: 'Shop',
     MANAGER: 'Manager',
     STAFF: 'Staff',
     USER: 'User',

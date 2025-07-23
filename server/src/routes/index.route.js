@@ -13,6 +13,7 @@ router.use('/upload', require('./upload.route'))
 router.use('/review', require('./review.route'))
 router.use('/catalog', require('./catalog.route'))
 router.use('/news', require('./news.route'))
+router.use('/rbac', require('./rbac.route'))
 
 router.post('/seed', async (req, res) => {
     return res.json({ data: await Product.insertMany(req.body) })

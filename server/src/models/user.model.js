@@ -17,6 +17,7 @@ const UserSchema = new Schema(
             enum: Object.values(Roles),
             default: Roles.USER,
         },
+        // role: { type: Types.ObjectId, ref: 'Role' },
         status: {
             type: String,
             enum: [Status.ACTIVE, Status.BANNED],

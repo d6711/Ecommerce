@@ -9,7 +9,7 @@ class Database {
     }
     async connect() {
         try {
-            mongoose.set('debug', true)
+            // mongoose.set('debug', true)
             await mongoose.connect(env.MONGO_URI, { maxPoolSize: 50 })
             console.log(`Connected MongoDb Success::${mongoose.connection.db.databaseName}`)
         } catch (error) {
