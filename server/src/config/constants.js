@@ -17,8 +17,8 @@ exports.env = {
     CLOUDINARY_API_KEY: process.env.CLOUDINARY_API_KEY,
     CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
 
-    EMAIL_USER: process.env.EMAIL_USER,
-    EMAIL_PASSWORD: process.env.EMAIL_PASSWORD,
+    SMTP_USER: process.env.SMTP_USER,
+    SMTP_PASSWORD: process.env.SMTP_PASSWORD,
 }
 
 exports.Headers = {

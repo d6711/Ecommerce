@@ -12,7 +12,7 @@ function grantAccess(action, resource) {
             const user = await getUserById(req.user.userId)
             const rolName = user.role
             const permission = rbac.can(rolName)[action](resource)
-            if (!permission.granted) throw new Unauthorized('You dont have enough permission')
+            if (!permission.granted) throw new Unauthorized('You dont have enough permission...')
             next()
         } catch (error) {
             next(error)

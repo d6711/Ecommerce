@@ -1,5 +1,6 @@
 const { BadRequest } = require("../core/error.exception")
 const cloudinary = require('../config/cloudinary')
+const fs = require('fs/promises')
 
 async function uploadImageFromUrl() {
     const urlImage = 'https://res.cloudinary.com/dbzy5jdmv/image/upload/v1745569038/cld-sample-3.jpg'
@@ -12,44 +13,43 @@ async function uploadImageFromUrl() {
     return result
 }
 
+const folderName = 'Ecommerce/images'
+const uniqueId = `thumb_${Date.now()}`
+
 async function uploadImageFromLocal(file) {
-    const folderName = 'Ecommerce/images'
     if (!file) throw new BadRequest('File not found')
+
+
     const result = await cloudinary.uploader.upload(file, {
-        public_id: 'thumb',
-        folder: folderName
+        public_id: uniqueId,
+        folder: folderName,
     })
+
+    await fs.unlink(file)
+
     return {
         imageUrl: result.secure_url,
-        imageId: 1001,
-        thumbUrl: await cloudinary.url(result.public_id, {
-            height: 100,
-            width: 100,
-            crop: 'fill',
-            format: 'jpg'
-        })
+        publicId: result.public_id,
     }
 }
-async function uploadMultipleFilesFromLocal(files) {
-    const folderName = 'EcommerceV2/images'
-    if (!files.length) throw new BadRequest('Files not found')
-    const uploadedUrl = []
-    for (const file of files) {
-        const result = await cloudinary.uploader.upload(file.path, {
-            folder: folderName
-        })
-        uploadedUrl.push({
-            imageUrl: result.secure_url,
-            shopId: 2502,
-            thumbUrl: await cloudinary.url(result.public_id, {
-                height: 250,
-                width: 250,
-                format: "jpg",
-            }),
 
+async function uploadMultipleFilesFromLocal(files) {
+    if (!files || !files.length) throw new BadRequest('Files not found')
+
+    const uploads = await Promise.all(files.map(async (file) => {
+        const result = await cloudinary.uploader.upload(file.path, {
+            folder: folderName,
         })
-    }
-    return uploadedUrl
+
+        await fs.unlink(file.path)
+
+        return {
+            imageUrl: result.secure_url,
+            publicId: result.public_id,
+        }
+    }))
+
+    return uploads
 }
 
 module.exports = {
