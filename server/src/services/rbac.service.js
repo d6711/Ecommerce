@@ -23,6 +23,11 @@ class RbacService {
         return await Role.create(body)
     }
 
+    static async setRoleUser(userId) {
+        const role = await Role.findOne({ name: 'user' })
+        return await User.updateOne({ _id: userId }, { role: role._id })
+    }
+
     static async getRoleList() {
         return await Role.aggregate([
             {

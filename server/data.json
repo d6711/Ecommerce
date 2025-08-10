@@ -1,0 +1,2761 @@
+{
+	"info": {
+		"_postman_id": "a5f5fe9d-c02e-423e-837c-6e7fcfc63e24",
+		"name": "Accessory",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44143711",
+		"_collection_link": "https://dev-7346809.postman.co/workspace/dev's-Workspace~f7c833a2-4786-45bf-89a9-fa2dd5983bd2/collection/44143711-a5f5fe9d-c02e-423e-837c-6e7fcfc63e24?action=share&source=collection_link&creator=44143711"
+	},
+	"item": [
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "verify-link",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"dev.lequang176@gmail.com\",\r\n   \"name\": \"haiduong\",\r\n   \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/auth/user/verify-link?email=&token=",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"auth",
+								"user",
+								"verify-link"
+							],
+							"query": [
+								{
+									"key": "email",
+									"value": ""
+								},
+								{
+									"key": "token",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"harryle6711@gmail.com\",\r\n   \"name\": \"haiduong\",\r\n   \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/auth/user/register",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"auth",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"\", function () {\r",
+									"   pm.response.to.be.success\r",
+									"   const { accessToken, refreshToken } = pm.response.json().metadata\r",
+									"   pm.environment.set(\"accessToken\", accessToken)\r",
+									"   pm.environment.set(\"refreshToken\", refreshToken)\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//    \"email\": \"haiduong6711@gmail.com\",\r\n//    \"password\": \"123456\"\r\n// }\r\n\r\n{\r\n   \"email\": \"dev.lequang176@gmail.com\",\r\n   \"password\": \"123456\"\r\n}\r\n\r\n\r\n// {\r\n//    \"email\": \"dev.lequang176@gmail.com\",\r\n//    \"password\": \"123456\"\r\n// }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/auth/user/login",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"auth",
+								"user",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "refresh-token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"\", function () {\r",
+									"   pm.response.to.be.success\r",
+									"   const { accessToken, refreshToken } = pm.response.json().metadata\r",
+									"   pm.environment.set(\"accessToken\", accessToken)\r",
+									"   pm.environment.set(\"refreshToken\", refreshToken)\r",
+									"})"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-rtoken-key",
+								"value": "{{refreshToken}}",
+								"type": "text"
+							},
+							{
+								"key": "authorization",
+								"value": "{{accessToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/auth/refresh-token",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"auth",
+								"refresh-token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "client-id",
+								"value": "{{client-id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"dev.lequang176@gmail.com\",\r\n   \"name\": \"haiduong\",\r\n   \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/auth/user/logout",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"auth",
+								"user",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot-password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "client-id",
+								"value": "{{client-id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"dev.lequang176@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/auth/user/forgot-password",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"auth",
+								"user",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "reset-password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "client-id",
+								"value": "{{client-id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"newPassword\":\"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/v1/api/auth/user/reset-password/e5f746742d241ee8c6bdacdea8586de5c73a935dbe99ba17a1b681109d633be3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"v1",
+								"api",
+								"auth",
+								"user",
+								"reset-password",
+								"e5f746742d241ee8c6bdacdea8586de5c73a935dbe99ba17a1b681109d633be3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "get all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "client-id",
+								"value": "{{client-id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"dev.lequang176@gmail.com\",\r\n   \"name\": \"haiduong\",\r\n   \"password\": \"123456\"\r\n}"
+						},
+						"url": {
+							"raw": "{{V1}}/categories",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get child",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "client-id",
+								"value": "{{client-id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"dev.lequang176@gmail.com\",\r\n   \"name\": \"haiduong\",\r\n   \"password\": \"123456\"\r\n}"
+						},
+						"url": {
+							"raw": "{{V1}}/categories/684632bc7a38180436246b44/child",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"categories",
+								"684632bc7a38180436246b44",
+								"child"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get child Copy",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "client-id",
+								"value": "{{client-id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"dev.lequang176@gmail.com\",\r\n   \"name\": \"haiduong\",\r\n   \"password\": \"123456\"\r\n}"
+						},
+						"url": {
+							"raw": "{{V1}}/categories/parent",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"categories",
+								"parent"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get by id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "client-id",
+								"value": "{{client-id}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"email\": \"dev.lequang176@gmail.com\",\r\n   \"name\": \"haiduong\",\r\n   \"password\": \"123456\"\r\n}"
+						},
+						"url": {
+							"raw": "{{V1}}/categories/6846327d7a38180436246b38",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"categories",
+								"6846327d7a38180436246b38"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"name\": \"Pin sạc dự phòng\",\r\n    \"description\": \"Pin dự phòng dung lượng lớn, sạc nhanh cho điện thoại và thiết bị di động.\",\r\n    \"parentId\": \"684632c87a38180436246b46\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/categories",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Điện thoại\",\r\n   \"isActive\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/categories/650000000000000000000001",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"categories",
+								"650000000000000000000001"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "upload",
+			"item": [
+				{
+					"name": "file",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/ADMIN/OneDrive/Pictures/ecom/500k-gia-dung-3.webp"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{V1}}/upload/file",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"upload",
+								"file"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "files",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": [
+										"/C:/Users/ADMIN/OneDrive/Pictures/ecom/ip1.png",
+										"/C:/Users/ADMIN/OneDrive/Pictures/ecom/ip3.png"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "{{V1}}/upload/files",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"upload",
+								"files"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "product",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "  {\r\n    \"name\": \"Bàn phím cơ Akko 3068B test tesstsdsdsd\",\r\n    \"price\": 1590000,\r\n    \"stock\": 50,\r\n    \"description\": \"Layout nhỏ gọn 68 phím, hỗ trợ cả Bluetooth và dây.\",\r\n    \"specification\": \"Bluetooth 5.0, switch Akko CS, RGB\",\r\n    \"brand\": \"Akko\",\r\n    \"tags\": [\"akko\", \"3068\", \"mini\"],\r\n    \"categoryId\": \"6846346c7a38180436246b8e\"\r\n  }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/products",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"images\":[]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/products/6854c39e8dd516e18b7d0483",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"products",
+								"6854c39e8dd516e18b7d0483"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Active",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\":\"iPhone 15 Pro Max\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products/681fe4c27380bb765b4d29d2/active",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products",
+								"681fe4c27380bb765b4d29d2",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inactive",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\":\"iphone 15 plus\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products/681fe4c27380bb765b4d29d2/inactive",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products",
+								"681fe4c27380bb765b4d29d2",
+								"inactive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/products/681ff5493474d8f278319a6a",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"products",
+								"681ff5493474d8f278319a6a"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Query",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Chuột không dây\",\r\n   \"price\": \"199000\",\r\n   \"quantity\": \"120\",\r\n   \"description\": \"Chuột không dây thiết kế công thái học, kết nối ổn định, dễ sử dụng.\",\r\n   \"specification\": \"Kết nối 2.4GHz, cổng USB, độ phân giải 1600 DPI, dùng pin AA\",\r\n   \"categoryId\": \"681637eaa3a2f49db32e5e5e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/products",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"products"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "maxPrice",
+									"value": "1000000",
+									"disabled": true
+								},
+								{
+									"key": "minPrice",
+									"value": "1000",
+									"disabled": true
+								},
+								{
+									"key": "tags",
+									"value": "giá rẻ",
+									"disabled": true
+								},
+								{
+									"key": "brand",
+									"value": "nike",
+									"disabled": true
+								},
+								{
+									"key": "sortBy",
+									"value": "price",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "desc",
+									"disabled": true
+								},
+								{
+									"key": "categoryId",
+									"value": "68310dd7e5c13afb98d03dee",
+									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Chuột không dây\",\r\n   \"price\": \"199000\",\r\n   \"quantity\": \"120\",\r\n   \"description\": \"Chuột không dây thiết kế công thái học, kết nối ổn định, dễ sử dụng.\",\r\n   \"specification\": \"Kết nối 2.4GHz, cổng USB, độ phân giải 1600 DPI, dùng pin AA\",\r\n   \"categoryId\": \"681637eaa3a2f49db32e5e5e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/products/681fe4c27380bb765b4d29d2",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"products",
+								"681fe4c27380bb765b4d29d2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By CatrgoryId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Chuột không dây\",\r\n   \"price\": \"199000\",\r\n   \"quantity\": \"120\",\r\n   \"description\": \"Chuột không dây thiết kế công thái học, kết nối ổn định, dễ sử dụng.\",\r\n   \"specification\": \"Kết nối 2.4GHz, cổng USB, độ phân giải 1600 DPI, dùng pin AA\",\r\n   \"categoryId\": \"681637eaa3a2f49db32e5e5e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/categories/684633527a38180436246b4f/products",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"categories",
+								"684633527a38180436246b4f",
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product Featured",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Chuột không dây\",\r\n   \"price\": \"199000\",\r\n   \"quantity\": \"120\",\r\n   \"description\": \"Chuột không dây thiết kế công thái học, kết nối ổn định, dễ sử dụng.\",\r\n   \"specification\": \"Kết nối 2.4GHz, cổng USB, độ phân giải 1600 DPI, dùng pin AA\",\r\n   \"categoryId\": \"681637eaa3a2f49db32e5e5e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/products/featured?limit=5&role=Shop",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"products",
+								"featured"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								},
+								{
+									"key": "role",
+									"value": "Shop"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Product BestSeller",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Chuột không dây\",\r\n   \"price\": \"199000\",\r\n   \"quantity\": \"120\",\r\n   \"description\": \"Chuột không dây thiết kế công thái học, kết nối ổn định, dễ sử dụng.\",\r\n   \"specification\": \"Kết nối 2.4GHz, cổng USB, độ phân giải 1600 DPI, dùng pin AA\",\r\n   \"categoryId\": \"681637eaa3a2f49db32e5e5e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/products/best-sellers?limit=5",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"products",
+								"best-sellers"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "discount",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Flash Deal 50k cho sản phẩm\",\r\n   \"description\": \"Ưu đãi đặc biệt cho phụ kiên điện thoại\",\r\n   \"code\": \"OPLUNG5P\",\r\n   \"type\": \"Percent\",\r\n   \"value\": 5,\r\n   \"maxValue\": 100000,\r\n   \"minOrderValue\": 200000,\r\n   \"startDate\": \"2025-06-21\",\r\n   \"endDate\": \"2025-07-15\",\r\n   \"applyTo\": \"Product\",\r\n   // \"categoryId\": [\r\n   //    \"6846327d7a38180436246b38\"\r\n   // ],\r\n   \"productId\": [\r\n      \"6854c39e8dd516e18b7d0483\",\r\n      \"6854c39e8dd516e18b7d0484\",\r\n      \"6854c39e8dd516e18b7d0485\"\r\n   ],\r\n   \"quantity\": 50\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/discounts",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"discounts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"SUMMER SALE test\",\r\n  \"description\": \"Giảm giá hè 150k cho các tất cả sản phẩm test\",\r\n//   \"code\": \"SALE150K tesst\",\r\n  \"type\":\"Fixed Amount\",\r\n  \"value\": 150000,\r\n//   \"maxValue\":300000,\r\n  \"minOrderValue\": 5000000,\r\n  \"startDate\":\"2025-05-17\",\r\n  \"endDate\": \"2025-06-15\",\r\n  \"quantity\": 10,\r\n  \"applyTo\":\"Product\",\r\n  \"productId\":[\r\n   \"681fe4c27380bb765b4d29d2\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/discounts/68229d4bdac7378fbea6ba89",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"discounts",
+								"68229d4bdac7378fbea6ba89"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Active",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\":\"iPhone 15 Pro Max\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/discounts/68229d4bdac7378fbea6ba89/active",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"discounts",
+								"68229d4bdac7378fbea6ba89",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inactive",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\":\"iphone 15 plus\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/discounts/68229d4bdac7378fbea6ba89/inactive",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"discounts",
+								"68229d4bdac7378fbea6ba89",
+								"inactive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{API_URL}}/discounts/682293883f60a2d51653694c",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"discounts",
+								"682293883f60a2d51653694c"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Query",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Chuột không dây\",\r\n   \"price\": \"199000\",\r\n   \"quantity\": \"120\",\r\n   \"description\": \"Chuột không dây thiết kế công thái học, kết nối ổn định, dễ sử dụng.\",\r\n   \"specification\": \"Kết nối 2.4GHz, cổng USB, độ phân giải 1600 DPI, dùng pin AA\",\r\n   \"categoryId\": \"681637eaa3a2f49db32e5e5e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/discounts?search=SALEHE10%&page=1&order=desc&limit=10",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"discounts"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "SALEHE10%"
+								},
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "sortBy",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								},
+								{
+									"key": "limit",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Chuột không dây\",\r\n   \"price\": \"199000\",\r\n   \"quantity\": \"120\",\r\n   \"description\": \"Chuột không dây thiết kế công thái học, kết nối ổn định, dễ sử dụng.\",\r\n   \"specification\": \"Kết nối 2.4GHz, cổng USB, độ phân giải 1600 DPI, dùng pin AA\",\r\n   \"categoryId\": \"681637eaa3a2f49db32e5e5e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/discounts/6822f41b2ae139f84779dea7",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"discounts",
+								"6822f41b2ae139f84779dea7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get By Code",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"Chuột không dây\",\r\n   \"price\": \"199000\",\r\n   \"quantity\": \"120\",\r\n   \"description\": \"Chuột không dây thiết kế công thái học, kết nối ổn định, dễ sử dụng.\",\r\n   \"specification\": \"Kết nối 2.4GHz, cổng USB, độ phân giải 1600 DPI, dùng pin AA\",\r\n   \"categoryId\": \"681637eaa3a2f49db32e5e5e\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{API_URL}}/discounts/code?code=SALEHE10%",
+							"host": [
+								"{{API_URL}}"
+							],
+							"path": [
+								"discounts",
+								"code"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "SALEHE10%"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Apply",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"code\": \"ELEC15F\",\r\n   \"products\": [\r\n      {\r\n         \"productId\": \"6854c39e8dd516e18b7d0483\",\r\n         \"quantity\": 2,\r\n         \"price\": 99000\r\n      },\r\n      {\r\n         \"productId\": \"6854c39e8dd516e18b7d0484\",\r\n         \"quantity\": 1,\r\n         \"price\": 159000\r\n      }\r\n   ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/discounts/apply",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"discounts",
+								"apply"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Apply Lisst",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/discounts/apply-list?code=OPLUNG50K",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"discounts",
+								"apply-list"
+							],
+							"query": [
+								{
+									"key": "code",
+									"value": "OPLUNG50K"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "cart",
+			"item": [
+				{
+					"name": "Add To Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//    \"productId\": \"6854c39e8dd516e18b7d0484\",\r\n//    \"quantity\": 1\r\n// }\r\n\r\n{\r\n   \"productId\": \"6854c39e8dd516e18b7d0483\",\r\n   \"quantity\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/cart",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"productId\": \"6854c39e8dd516e18b7d0483\",\r\n   \"quantity\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/cart/update",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"cart",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cart Item",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/cart/item?productId=6854c39e8dd516e18b7d0484",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"cart",
+								"item"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "6854c39e8dd516e18b7d0484"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Cart",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/cart/685671ad6243fcf119b2b968",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"cart",
+								"685671ad6243fcf119b2b968"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Info Cart",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/cart",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"cart"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "catalog",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\":\"Tin Chính Trị\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/catalog",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"catalog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\":\"Tin Chính Trị\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/catalog/687ef405d203bc1042bd4f3f",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"catalog",
+								"687ef405d203bc1042bd4f3f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/catalog",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"catalog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/catalog/687ef405d203bc1042bd4f3f",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"catalog",
+								"687ef405d203bc1042bd4f3f"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/catalog",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"catalog"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "news",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"title\":\"tin tức test 1\",\r\n   \"summary\":\"toms tắt 12sdsdsds\",\r\n   \"content\":\"Để có cái nhìn khách quan về khả năng pin, mình đã thực hiện ba chu kỳ test độc lập với Galaxy Z Fold7. Bài test đầu tiên tập trung chơi game và sử dụng mạng xã hội, bài test thứ hai sử dụng văn phòng cơ bản và bài test cuối cùng là thử thách cường độ cao từ 100% xuống 5% pin để đánh giá khả năng thực sự của máy.\",\r\n   \"catalog\":\"687ef3e3d203bc1042bd4f36\",\r\n   \"tags\":[\"ok\",\"sdsd\",\"123\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/news",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"news"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n      \"title\":\"tin tức test 1 update\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/news/687ef55fd203bc1042bd4f50",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"news",
+								"687ef55fd203bc1042bd4f50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/catalog",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"catalog"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by id",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/news/687ef55fd203bc1042bd4f50",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"news",
+								"687ef55fd203bc1042bd4f50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/news",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"news"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "review",
+			"item": [
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"productId\":\"6854c39e8dd516e18b7d0483\",\r\n   \"rating\":5,\r\n   \"comment\":\"Sản phẩm rất tốt\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/review",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"review"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get review productId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"productId\": \"6854c39e8dd516e18b7d0483\",\r\n   \"quantity\": -1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/review/product?productId=6854c39e8dd516e18b7d0483",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"review",
+								"product"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "6854c39e8dd516e18b7d0483"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/review?productId=6854c39e8dd516e18b7d0484",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"review"
+							],
+							"query": [
+								{
+									"key": "productId",
+									"value": "6854c39e8dd516e18b7d0484"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{V1}}/review",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"review"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get all",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/review",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"review"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get review user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/review/user",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"review",
+								"user"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "checkout",
+			"item": [
+				{
+					"name": "momo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"cartId\": \"6867360e146da63f0b23a3e9\",\r\n   \"method\": \"Momo\",\r\n   \"address\": {\r\n      \"fullName\": \"Lê Quang Hải Dương\",\r\n      \"phone\": \"0963545007\",\r\n      \"street\": \"Số 123, thôn An Cố Nam\",\r\n      \"ward\": \"An Tân\", // Xã An Tân\r\n      \"district\": \"Thái Thụy\", // Huyện Thái Thụy\r\n      \"city\": \"Thái Bình\", // Tỉnh Thái Bình\r\n      \"country\": \"Vietnam\"\r\n   },\r\n   \"note\": \"Giao hàng vào buổi sáng\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/checkout",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "vnpay",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"cartId\":\"6865156d7d0041761a98c07b\",\r\n   \"method\":\"VnPay\",\r\n   \"address\":\"An Tân, Thái Thụy, Thái Bình\",\r\n   \"note\":\"Giao hàng vào buổi sáng\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/checkout",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Apply Discount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"cartId\": \"685de66031ea467d92fc8b97\",\r\n   \"discountCode\": \"ELEC15F\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/checkout/apply-discount",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"checkout",
+								"apply-discount"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Discount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"cartId\": \"6823fdd04146dbf4f76840e7\",\r\n   \"discountCode\": \"FIX99K\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/checkout/remove-discount/68567d40efca7fc3f89cebcd",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"checkout",
+								"remove-discount",
+								"68567d40efca7fc3f89cebcd"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "order",
+			"item": [
+				{
+					"name": "my order",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"address\":\"an tan thai thuy thai binh\",\r\n   \"note\":\"giao hàng vào buổi sáng\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/order/my-order",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"order",
+								"my-order"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "rbac",
+			"item": [
+				{
+					"name": "Create role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"super_admin\",\r\n   \"slug\": \"super-admin\",\r\n   \"description\": \"super admin role\",\r\n   \"grants\": [\r\n      // role\r\n      {\r\n         \"resource\": \"6897f94f795e3a50e5f5ac5c\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // resource\r\n      {\r\n         \"resource\": \"6897f969795e3a50e5f5ac5e\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // product\r\n      {\r\n         \"resource\": \"688035e117c0b935030edfcc\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // category\r\n      {\r\n         \"resource\": \"688035f817c0b935030edfce\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // discount\r\n      {\r\n         \"resource\": \"6897f8db795e3a50e5f5ac52\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // order\r\n      {\r\n         \"resource\": \"6897f903795e3a50e5f5ac54\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // cart\r\n      {\r\n         \"resource\": \"6897f90f795e3a50e5f5ac56\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // news\r\n      {\r\n         \"resource\": \"6897f92d795e3a50e5f5ac58\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // review\r\n      {\r\n         \"resource\": \"6897f93e795e3a50e5f5ac5a\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // user\r\n       {\r\n         \"resource\": \"6897fdaadce501d0893cee7f\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            \"read:any\",\r\n            \"delete:any\",\r\n            \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      }\r\n   ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/rbac/role",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"rbac",
+								"role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Set role",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\": \"User\",\r\n   \"slug\": \"user\",\r\n   \"description\": \"user role\",\r\n   \"grants\": [\r\n      {\r\n         \"resource\": \"688035e117c0b935030edfcc\",\r\n         \"actions\": [\r\n            // \"update:any\",\r\n            \"read:any\"\r\n            // \"delete:any\",\r\n            // \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      }\r\n   ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/rbac/role?userId=68980117dce501d0893ceeba&role=user",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"rbac",
+								"role"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "68980117dce501d0893ceeba"
+								},
+								{
+									"key": "role",
+									"value": "user"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update role",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\r\n//    \"name\": \"user\",\r\n//    \"slug\": \"user\",\r\n//    \"description\": \"user role\",\r\n//    \"grants\": [\r\n//       // product\r\n//       {\r\n//          \"resource\": \"688035e117c0b935030edfcc\",\r\n//          \"description\": \"product\",\r\n//          \"actions\": [\r\n//             // \"update:any\",\r\n//             // \"delete:any\",\r\n//             // \"create:any\",\r\n//             \"read:any\"\r\n//          ],\r\n//          \"attributes\": \"*\"\r\n//       },\r\n//       // category\r\n//       {\r\n//          \"resource\": \"688035f817c0b935030edfce\",\r\n//          \"description\": \"category\",\r\n//          \"actions\": [\r\n//             // \"update:any\",\r\n//             // \"delete:any\",\r\n//             // \"create:any\",\r\n//             \"read:any\"\r\n//          ],\r\n//          \"attributes\": \"*\"\r\n//       },\r\n//       // discount\r\n//       {\r\n//          \"resource\": \"6897f8db795e3a50e5f5ac52\",\r\n//          \"description\": \"discount\",\r\n//          \"actions\": [\r\n//             // \"update:any\",\r\n//             // \"delete:any\",\r\n//             // \"create:any\",\r\n//             \"read:any\"\r\n//          ],\r\n//          \"attributes\": \"*\"\r\n//       },\r\n//       // order\r\n//       {\r\n//          \"resource\": \"6897f903795e3a50e5f5ac54\",\r\n//          \"description\": \"order\",\r\n//          \"actions\": [\r\n//             // \"update:any\",\r\n//             // \"delete:any\",\r\n//             // \"create:any\",\r\n//             \"read:any\"\r\n//          ],\r\n//          \"attributes\": \"*\"\r\n//       },\r\n//       // cart\r\n//       {\r\n//          \"resource\": \"6897f90f795e3a50e5f5ac56\",\r\n//          \"description\": \"cart\",\r\n//          \"actions\": [\r\n//             \"update:own\",\r\n//             \"read:own\",\r\n//             \"delete:own\",\r\n//             \"create:own\"\r\n//          ],\r\n//          \"attributes\": \"*\"\r\n//       },\r\n//       // news\r\n//       {\r\n//          \"resource\": \"6897f92d795e3a50e5f5ac58\",\r\n//          \"description\": \"news\",\r\n//          \"actions\": [\r\n//             // \"update:any\",\r\n//             // \"delete:any\",\r\n//             // \"create:any\",\r\n//             \"read:any\"\r\n//          ],\r\n//          \"attributes\": \"*\"\r\n//       },\r\n//       // review\r\n//       {\r\n//          \"resource\": \"6897f93e795e3a50e5f5ac5a\",\r\n//          \"description\": \"review\",\r\n//          \"actions\": [\r\n//             \"update:own\",\r\n//             \"read:any\",\r\n//             // \"delete:any\",\r\n//             \"create:own\"\r\n//          ],\r\n//          \"attributes\": \"*\"\r\n//       },\r\n//       // user\r\n//       {\r\n//          \"resource\": \"6897fdaadce501d0893cee7f\",\r\n//          \"description\": \"user\",\r\n//          \"actions\": [\r\n//             \"update:own\",\r\n//             \"read:own\"\r\n//             // \"delete:any\",\r\n//             // \"create:any\"\r\n//          ],\r\n//          \"attributes\": \"*\"\r\n//       }\r\n//    ]\r\n// }\r\n\r\n\r\n\r\n{\r\n   \"name\": \"admin\",\r\n   \"slug\": \"admin\",\r\n   \"description\": \"admin role\",\r\n   \"grants\": [\r\n      // product\r\n      {\r\n         \"resource\": \"688035e117c0b935030edfcc\",\r\n         \"description\": \"product\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            // \"delete:any\",\r\n            \"create:any\",\r\n            \"read:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // category\r\n      {\r\n         \"resource\": \"688035f817c0b935030edfce\",\r\n         \"description\": \"category\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            // \"delete:any\",\r\n            \"create:any\",\r\n            \"read:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // discount\r\n      {\r\n         \"resource\": \"6897f8db795e3a50e5f5ac52\",\r\n         \"description\": \"discount\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            // \"delete:any\",\r\n            \"create:any\",\r\n            \"read:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // order\r\n      {\r\n         \"resource\": \"6897f903795e3a50e5f5ac54\",\r\n         \"description\": \"order\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            // \"delete:any\",\r\n            \"create:any\",\r\n            \"read:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // cart\r\n      {\r\n         \"resource\": \"6897f90f795e3a50e5f5ac56\",\r\n         \"description\": \"cart\",\r\n         \"actions\": [\r\n            // \"update:own\",\r\n            \"read:any\"\r\n            // \"delete:own\",\r\n            // \"create:own\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // news\r\n      {\r\n         \"resource\": \"6897f92d795e3a50e5f5ac58\",\r\n         \"description\": \"news\",\r\n         \"actions\": [\r\n            \"update:any\",\r\n            // \"delete:any\",\r\n            \"create:any\",\r\n            \"read:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // review\r\n      {\r\n         \"resource\": \"6897f93e795e3a50e5f5ac5a\",\r\n         \"description\": \"review\",\r\n         \"actions\": [\r\n            \"update:own\",\r\n            \"read:any\",\r\n            // \"delete:any\",\r\n            \"create:own\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      },\r\n      // user\r\n      {\r\n         \"resource\": \"6897fdaadce501d0893cee7f\",\r\n         \"description\": \"user\",\r\n         \"actions\": [\r\n            // \"update:own\",\r\n            \"read:any\"\r\n            // \"delete:any\",\r\n            // \"create:any\"\r\n         ],\r\n         \"attributes\": \"*\"\r\n      }\r\n   ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/rbac/role/6880365617c0b935030edfd0",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"rbac",
+								"role",
+								"6880365617c0b935030edfd0"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create resource",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{x-api-key}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"name\":\"user\",\r\n   \"slug\":\"user\",\r\n   \"description\":\"user global\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{V1}}/rbac/resource",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"rbac",
+								"resource"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get resource",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{V1}}/rbac/resource",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"rbac",
+								"resource"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get role",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{V1}}/rbac/role",
+							"host": [
+								"{{V1}}"
+							],
+							"path": [
+								"rbac",
+								"role"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{accessToken}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "seed data",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{x-api-key}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"name\": \"Bàn phím cơ Akko 3068B\",\r\n    \"price\": 1590000,\r\n    \"stock\": 50,\r\n    \"description\": \"Layout nhỏ gọn 68 phím, hỗ trợ cả Bluetooth và dây.\",\r\n    \"specification\": \"Bluetooth 5.0, switch Akko CS, RGB\",\r\n    \"brand\": \"Akko\",\r\n    \"tags\": [\"akko\", \"3068\", \"mini\"],\r\n    \"categoryId\": \"6846346c7a38180436246b8e\"\r\n  },\r\n  {\r\n    \"name\": \"Bàn phím Keychron K6\",\r\n    \"price\": 1990000,\r\n    \"stock\": 50,\r\n    \"description\": \"Bàn phím 65%, đa kết nối, pin lâu, gọn nhẹ.\",\r\n    \"specification\": \"Switch Gateron, Bluetooth & USB-C\",\r\n    \"brand\": \"Keychron\",\r\n    \"tags\": [\"keychron\", \"k6\", \"65%\"],\r\n    \"categoryId\": \"6846346c7a38180436246b8e\"\r\n  },\r\n  {\r\n    \"name\": \"Bàn phím cơ mini DareU EK87\",\r\n    \"price\": 1000000,\r\n    \"stock\": 50,\r\n    \"description\": \"Bàn phím cơ chất lượng cao dành cho game thủ và dân văn phòng.\",\r\n    \"specification\": \"Switch Blue, đèn nền RGB, layout TKL\",\r\n    \"brand\": \"DareU\",\r\n    \"tags\": [\"bàn phím cơ\", \"gaming\", \"máy tính\"],\r\n    \"categoryId\": \"6846346c7a38180436246b8e\"\r\n  },\r\n  {\r\n    \"name\": \"Bàn phím cơ Leopold FC660M\",\r\n    \"price\": 2890000,\r\n    \"stock\": 50,\r\n    \"description\": \"Chất lượng build cao, thiết kế tối giản, layout 66 phím.\",\r\n    \"specification\": \"Switch Cherry MX, không đèn\",\r\n    \"brand\": \"Leopold\",\r\n    \"tags\": [\"leopold\", \"FC660M\", \"minimal\"],\r\n    \"categoryId\": \"6846346c7a38180436246b8e\"\r\n  },\r\n  {\r\n    \"name\": \"Bàn phím cơ mini Razer Huntsman Mini\",\r\n    \"price\": 2690000,\r\n    \"stock\": 50,\r\n    \"description\": \"Phím quang học, siêu nhanh, siêu bền, layout 60%.\",\r\n    \"specification\": \"Switch quang Razer, RGB, dây rời\",\r\n    \"brand\": \"Razer\",\r\n    \"tags\": [\"razer\", \"60%\", \"quang học\"],\r\n    \"categoryId\": \"6846346c7a38180436246b8e\"\r\n  }\r\n]\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{V1}}/seed",
+					"host": [
+						"{{V1}}"
+					],
+					"path": [
+						"seed"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

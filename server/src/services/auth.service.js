@@ -9,6 +9,7 @@ const { getInfoData } = require("../utils/index")
 const { templateVerifyOtp, templateVerifyLink } = require("../utils/templateEmail")
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
+const RbacService = require("./rbac.service")
 
 class AuthService {
     static async signUp({ email, name, password }) {
@@ -59,6 +60,7 @@ class AuthService {
         const userId = user._id
         const { accessToken, refreshToken } = createTokenPair({ userId, email })
         await KeyTokenService.createKeyToken({ userId, refreshToken })
+        await RbacService.setRoleUser(userId)
         return {
             userInfo: getInfoData({
                 fields: ['_id', 'name', 'email', 'role'],
