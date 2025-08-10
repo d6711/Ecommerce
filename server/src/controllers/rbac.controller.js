@@ -1,29 +1,41 @@
-const { createRole, createResource, roleList, resourceList } = require("../services/rbac.service")
 const { Success } = require('../core/success.response')
+const RbacService = require('../services/rbac.service')
 
 class RbacController {
-    async newRole(req, res) {
+    async createRole(req, res) {
         new Success({
-            message: 'Created role',
-            metadata: await createRole(req.body)
+            message: 'Create new role',
+            metadata: await RbacService.createRole(req.body)
         }).send(res)
     }
-    async newResource(req, res) {
+    async getRoleList(req, res) {
         new Success({
-            message: 'Created resource',
-            metadata: await createResource(req.body)
+            message: 'Get role list',
+            metadata: await RbacService.getRoleList()
         }).send(res)
     }
-    async listRole(req, res) {
+    async createResource(req, res) {
         new Success({
-            message: 'Get list role resource',
-            metadata: await roleList(req.query)
+            message: 'Create new resource',
+            metadata: await RbacService.createResource(req.body)
         }).send(res)
     }
-    async listResource(req, res) {
+    async updateRole(req, res) {
         new Success({
-            message: 'Get list resource',
-            metadata: await resourceList(req.query)
+            message: 'Update role',
+            metadata: await RbacService.updateRole(req.params.id, req.body)
+        }).send(res)
+    }
+    async getResourceList(req, res) {
+        new Success({
+            message: 'Get resource list',
+            metadata: await RbacService.getResourceList()
+        }).send(res)
+    }
+    async setRole(req, res) {
+        new Success({
+            message: 'Set role for user',
+            metadata: await RbacService.setRole(req.query)
         }).send(res)
     }
 }

@@ -12,12 +12,12 @@ const UserSchema = new Schema(
         verify: { type: Boolean, default: false },
         otpCode: Number,
         otpExpires: Date,
-        role: {
-            type: String,
-            enum: Object.values(Roles),
-            default: Roles.USER,
-        },
-        // role: { type: Types.ObjectId, ref: 'Role' },
+        // role: {
+        //     type: String,
+        //     enum: Object.values(Roles),
+        //     default: Roles.USER,
+        // },
+        role: { type: Types.ObjectId, ref: 'Role' },
         status: {
             type: String,
             enum: [Status.ACTIVE, Status.BANNED],

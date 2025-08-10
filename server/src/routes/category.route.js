@@ -4,6 +4,7 @@ const { authentication } = require('../middlewares/auth')
 const { asyncHandler, validate } = require('../middlewares/handleError')
 const { Router } = require('express')
 const { createCategory, updateCategory } = require('../validations/category.schema')
+const { grantAccess } = require('../middlewares/rbac')
 const router = Router()
 
 router.get('/', asyncHandler(categoryController.getAllCategories))
@@ -14,8 +15,8 @@ router.get('/:categoryId/products', asyncHandler(productController.getProductByC
 
 router.use(authentication)
 
-router.post('/', validate(createCategory), asyncHandler(categoryController.createCategory))
-router.patch('/:id', validate(updateCategory), asyncHandler(categoryController.updateCategory))
-router.delete('/:id', asyncHandler(categoryController.deleteCategory))
+router.post('/', grantAccess('createAny', 'category'), validate(createCategory), asyncHandler(categoryController.createCategory))
+router.patch('/:id', grantAccess('updateAny', 'category'), validate(updateCategory), asyncHandler(categoryController.updateCategory))
+router.delete('/:id', grantAccess('deleteAny', 'category'), asyncHandler(categoryController.deleteCategory))
 
 module.exports = router

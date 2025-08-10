@@ -21,6 +21,7 @@ const RoleSchema = new Schema(
         grants: [
             {
                 resource: { type: Types.ObjectId, ref: 'Resource', required: true },
+                description: String,
                 actions: [{ type: String, required: true }],
                 attributes: { type: String, default: '*' },
             }

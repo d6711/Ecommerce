@@ -1,42 +1,29 @@
+const { BadRequest } = require("../core/error.exception")
+const { getUserById } = require("../helpers/auth.helper")
 const Resource = require("../models/resource.model")
 const Role = require("../models/role.model")
+const User = require("../models/user.model")
 
-async function createResource(body) {
-    try {
-        return await Resource.create(body)
-    } catch (error) {
-        return error
+class RbacService {
+    static async setRole({ userId, role }) {
+        const user = await getUserById(userId)
+        if (!user) throw new BadRequest('User not found')
+
+        const roleGrant = await Role.findOne({ name: role })
+        if (!roleGrant) throw new BadRequest('Role not found')
+
+        return await User.updateOne({ _id: userId }, { role: roleGrant._id })
     }
-}
-
-async function resourceList() {
-    try {
-        return await Resource.aggregate([
-            {
-                $project: {
-                    name: '$name',
-                    slug: '$slug',
-                    description: '$description',
-                    resourceId: '$_id',
-                    createdAt: 1
-                }
-            }
-        ])
-    } catch (error) {
-        return error
+    static async getRoleNameByUserId(userId) {
+        const user = await User.findById(userId).populate('role').lean()
+        return user.role.name
     }
-}
 
-async function createRole(body) {
-    try {
+    static async createRole(body) {
         return await Role.create(body)
-    } catch (error) {
-        return error
     }
-}
 
-async function roleList() {
-    try {
+    static async getRoleList() {
         return await Role.aggregate([
             {
                 $unwind: '$grants'
@@ -74,14 +61,29 @@ async function roleList() {
                 }
             }
         ])
-    } catch (error) {
-        return error
     }
+    static async createResource(body) {
+        return await Resource.create(body)
+    }
+    static async getResourceList() {
+        return await Resource.aggregate([
+            {
+                $project: {
+                    name: '$name',
+                    slug: '$slug',
+                    description: '$description',
+                    resourceId: '$_id',
+                    createdAt: 1
+                }
+            }
+        ])
+    }
+    static updateRole(id, bodyUpdate) {
+        const role = Role.findById(id)
+        if (!role) throw new BadRequest('Role not found')
+        return Role.updateOne({ _id: id }, bodyUpdate)
+    }
+
 }
 
-module.exports = {
-    createResource,
-    resourceList,
-    createRole,
-    roleList
-}
+module.exports = RbacService

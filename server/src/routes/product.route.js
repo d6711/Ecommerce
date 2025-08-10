@@ -13,10 +13,26 @@ router.get('/:id', asyncHandler(productController.getProductById))
 
 router.use(authentication)
 
-router.post('/', grantAccess('createAny', 'product'), validate(createProduct), asyncHandler(productController.createProduct))
-router.patch('/:id', validate(updateProduct), asyncHandler(productController.updateProduct))
-router.patch('/:id/active', asyncHandler(productController.activeProduct))
-router.patch('/:id/inactive', asyncHandler(productController.inactiveProduct))
-router.delete('/:id', asyncHandler(productController.deleteProduct))
+router.post('/',
+    grantAccess('createAny', 'product'),
+    validate(createProduct),
+    asyncHandler(productController.createProduct))
+
+router.patch('/:id',
+    grantAccess('updateAny', 'product'),
+    validate(updateProduct),
+    asyncHandler(productController.updateProduct))
+
+router.patch('/:id/active',
+    grantAccess('updateAny', 'product'),
+    asyncHandler(productController.activeProduct))
+
+router.patch('/:id/inactive',
+    grantAccess('updateAny', 'product'),
+    asyncHandler(productController.inactiveProduct))
+
+router.delete('/:id',
+    grantAccess('deleteAny', 'product'),
+    asyncHandler(productController.deleteProduct))
 
 module.exports = router

@@ -69,12 +69,13 @@ exports.HttpStatus = {
 }
 
 exports.Roles = {
-    SUPER_ADMIN: 'Super Admin',
-    ADMIN: 'Admin',
-    SHOP: 'Shop',
-    MANAGER: 'Manager',
-    STAFF: 'Staff',
-    USER: 'User',
+    SUPER_ADMIN: 'super_admin',
+    ADMIN: 'admin',
+    SHOP: 'shop',
+    MANAGER: 'manager',
+    EDITOR: 'editor',
+    GUEST: 'guest',
+    USER: 'user',
 }
 
 exports.Permissions = {

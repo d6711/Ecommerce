@@ -1,12 +1,17 @@
 const express = require('express')
 const { asyncHandler } = require('../middlewares/handleError')
 const rbacController = require('../controllers/rbac.controller')
+const { grantAccess } = require('../middlewares/rbac')
+const { authentication } = require('../middlewares/auth')
 const router = express.Router()
 
-router.post('/role', asyncHandler(rbacController.newRole))
-router.post('/resource', asyncHandler(rbacController.newResource))
+router.use(authentication)
+router.get('/role', grantAccess('readAny', 'role'), asyncHandler(rbacController.getRoleList))
+router.post('/role', grantAccess('createAny', 'role'), asyncHandler(rbacController.createRole))
+router.patch('/role', grantAccess('updateAny', 'role'), asyncHandler(rbacController.setRole))
+router.patch('/role/:id', grantAccess('updateAny', 'role'), asyncHandler(rbacController.updateRole))
 
-router.get('/role', asyncHandler(rbacController.listRole))
-router.get('/resource', asyncHandler(rbacController.listResource))
+router.get('/resource', grantAccess('readAny', 'resource'), asyncHandler(rbacController.getResourceList))
+router.post('/resource', grantAccess('createAny', 'resource'), asyncHandler(rbacController.createResource))
 
 module.exports = router
