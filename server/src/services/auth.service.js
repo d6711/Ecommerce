@@ -60,7 +60,7 @@ class AuthService {
         const userId = user._id
         const { accessToken, refreshToken } = createTokenPair({ userId, email })
         await KeyTokenService.createKeyToken({ userId, refreshToken })
-        await RbacService.setRoleUser(userId)
+        // await RbacService.setRoleUser(userId)
         return {
             userInfo: getInfoData({
                 fields: ['_id', 'name', 'email', 'role'],

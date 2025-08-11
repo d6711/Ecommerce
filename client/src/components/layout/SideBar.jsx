@@ -1,15 +1,4 @@
-import {
-    BarChart3,
-    ChartBarStacked,
-    Home,
-    Layers,
-    Menu,
-    Settings,
-    ShoppingCart,
-    Users,
-    Warehouse,
-    X,
-} from 'lucide-react'
+import { BarChart3, ChartBarStacked, Home, Layers, Menu, Settings, ShoppingCart, Users, Warehouse, X } from 'lucide-react'
 import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 
@@ -37,10 +26,7 @@ const SideBar = () => {
                         X-Store
                     </h1>
                 )}
-                <button
-                    onClick={() => setSidebarOpen(!sidebarOpen)}
-                    className="p-1 transition-colors rounded-lg hover:bg-slate-700"
-                >
+                <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 transition-colors rounded-lg hover:bg-slate-700">
                     {sidebarOpen ? <X size={20} /> : <Menu size={20} />}
                 </button>
             </div>
@@ -61,7 +47,7 @@ const SideBar = () => {
                             `}
                         >
                             <IconComponent size={20} className="flex-shrink-0" />
-                            {sidebarOpen && <span className="ml-3 font-medium">{item.text}</span>}
+                            {sidebarOpen && <span className="ml-3 font-medium whitespace-nowrap">{item.text}</span>}
                             {!sidebarOpen && (
                                 <div className="absolute px-2 py-1 text-sm text-white transition-opacity duration-200 rounded-md opacity-0 pointer-events-none left-16 bg-slate-800 group-hover:opacity-100">
                                     {item.text}

@@ -72,30 +72,18 @@ const Login = () => {
         <div className="flex items-center justify-center h-screen">
             <div className="flex flex-col p-5 border border-gray-300 shadow-2xl rounded-sm w-[350px]">
                 <Box component="form" onSubmit={formik.handleSubmit}>
-                    <div className="mb-5 text-2xl font-bold text-center">
-                        {isLogin ? 'SIGN IN' : 'SIGN UP'}
-                    </div>
+                    <div className="mb-5 text-2xl font-bold text-center">{isLogin ? 'SIGN IN' : 'SIGN UP'}</div>
                     {!isLogin && <InputCommon id="name" label="Name" type="text" formik={formik} />}
                     <InputCommon id="email" label="Email" type="text" formik={formik} />
                     <InputCommon id="password" label="Password" type="password" formik={formik} />
-                    {!isLogin && (
-                        <InputCommon
-                            id="cfmpassword"
-                            label="Confirm Password"
-                            type="password"
-                            formik={formik}
-                        />
-                    )}
+                    {!isLogin && <InputCommon id="cfmpassword" label="Confirm Password" type="password" formik={formik} />}
                     {isLogin && <FormControlLabel control={<Checkbox />} label="Remember me" />}
                     <Button type="submit" variant="contained" fullWidth>
                         {isLogin ? 'SIGN IN' : 'SIGN UP'}
                     </Button>
                     <div className="flex justify-center gap-2 mt-2">
                         <p>{isLogin ? "Don't have an account" : 'Already have an account?'}</p>
-                        <p
-                            className="text-blue-600 cursor-pointer hover:underline"
-                            onClick={handleResetForm}
-                        >
+                        <p className="text-blue-600 cursor-pointer hover:underline" onClick={handleResetForm}>
                             {isLogin ? 'Sign Up' : 'Sign In'}
                         </p>
                     </div>

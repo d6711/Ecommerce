@@ -11,14 +11,6 @@ const Header = () => {
                 </div>
 
                 <div className="flex items-center space-x-4">
-                    <div className="hidden md:flex items-center bg-gray-100 rounded-lg px-3 py-2">
-                        <Search size={18} className="text-gray-400 mr-2" />
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            className="bg-transparent outline-none text-sm w-64"
-                        />
-                    </div>
                     <AccountMenu />
                 </div>
             </div>

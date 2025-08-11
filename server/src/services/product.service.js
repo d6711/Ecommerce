@@ -77,7 +77,7 @@ class ProductService {
                 ...(maxPrice && { $lte: maxPrice })
             }
         }
-        console.log(filter)
+        // console.log(filter)
         return await pagination({
             model: Product,
             search, searchFields: ['name', 'description', 'specification'],

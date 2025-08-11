@@ -23,7 +23,6 @@ class CategoryController {
         }).send(res)
     }
     async createCategory(req, res) {
-        console.log(req.body)
         new Success({
             message: 'Create category successfully',
             metadata: await CategoryService.createCategory(req.body)

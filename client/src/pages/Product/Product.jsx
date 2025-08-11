@@ -1,6 +1,20 @@
 import { ToastContext } from '@context/ToastContext'
 import { Delete, Edit, Visibility } from '@mui/icons-material'
-import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography } from '@mui/material'
+import {
+    Avatar,
+    Box,
+    Button,
+    IconButton,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Tooltip,
+    Typography,
+} from '@mui/material'
 import { getProducts } from '@services/productService'
 import React, { useContext, useEffect, useState } from 'react'
 
@@ -37,38 +51,49 @@ const ProductPage = () => {
                             <TableCell>Ảnh</TableCell>
                             <TableCell>Tên sản phẩm</TableCell>
                             <TableCell>Giá bán</TableCell>
-                            <TableCell>Số lượng trong kho</TableCell>
-                            {/* <TableCell>Số sao trung bình</TableCell> */}
-                            {/* <TableCell>Số lượt đánh giá</TableCell> */}
-                            {/* <TableCell>Mô tả</TableCell> */}
-                            {/* <TableCell>Thông số kỹ thuật</TableCell> */}
+                            <TableCell>Số lượng</TableCell>
+                            {/* <TableCell>Số sao trung bình</TableCell>
+                            <TableCell>Số lượt đánh giá</TableCell>
+                            <TableCell>Mô tả</TableCell>
+                            <TableCell>Thông số kỹ thuật</TableCell> */}
                             <TableCell>Thương hiệu</TableCell>
-                            {/* <TableCell>Tag</TableCell> */}
+                            <TableCell>Tag</TableCell>
                             <TableCell>Danh mục sản phẩm</TableCell>
-                            {/* <TableCell>Trạng thái</TableCell> */}
-                            {/* <TableCell>Sản phẩm nổi bật</TableCell> */}
-                            {/* <TableCell>Đã bán</TableCell> */}
+                            {/* <TableCell>Trạng thái</TableCell>
+                            <TableCell>Sản phẩm nổi bật</TableCell> */}
+                            <TableCell>Đã bán</TableCell>
                             <TableCell>Hành động</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products.map((product) => (
+                        {products.map((product, index) => (
                             <TableRow key={product._id}>
-                                <TableCell>1</TableCell>
-                                <TableCell>{product.images[0]}</TableCell>
+                                <TableCell>{index + 1}</TableCell>
+                                <TableCell>
+                                    <Avatar src={product.images[0]} alt={product.name} sx={{ width: 64, height: 64 }} variant="square" />
+                                </TableCell>
                                 <TableCell>{product.name}</TableCell>
-                                <TableCell>{product.price}</TableCell>
-                                <TableCell>{product.stock}</TableCell>
-                                {/* <TableCell>{product.ratingAvg}</TableCell> */}
-                                {/* <TableCell>{product.ratingCount}</TableCell> */}
-                                {/* <TableCell>{product.description}</TableCell> */}
-                                {/* <TableCell>{product.specification}</TableCell> */}
+                                <TableCell>{product.price.toLocaleString('vi-VN') + ' đ'}</TableCell>
+                                <TableCell align="center">{product.stock}</TableCell>
+                                {/* <TableCell>{product.ratingAvg}</TableCell>
+                                <TableCell>{product.ratingCount}</TableCell>
+                                <TableCell>{product.description}</TableCell>
+                                <TableCell>{product.specification}</TableCell> */}
                                 <TableCell>{product.brand}</TableCell>
-                                {/* <TableCell>{product.tags.join(', ')}</TableCell> */}
+                                <TableCell>
+                                    <ul className="flex flex-col items-start gap-2">
+                                        {product.tags.map((tag, index) => (
+                                            <li key={index} className="px-2 py-1 text-xs text-white bg-gray-600 rounded-lg whitespace-nowrap w-auto">
+                                                {tag}
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </TableCell>
+
                                 <TableCell>{product.categoryId?.name}</TableCell>
-                                {/* <TableCell>{product.isActive}</TableCell> */}
-                                {/* <TableCell>{product.isFeatured}</TableCell> */}
-                                {/* <TableCell>{product.soldCount}</TableCell> */}
+                                {/* <TableCell>{product.isActive}</TableCell>
+                                <TableCell>{product.isFeatured}</TableCell> */}
+                                <TableCell align="center">{product.soldCount}</TableCell>
                                 <TableCell>
                                     <Box sx={{ display: 'flex', gap: 1 }}>
                                         <Tooltip title="Xem">
