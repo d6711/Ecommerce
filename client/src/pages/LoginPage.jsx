@@ -1,4 +1,3 @@
-import InputCommon from '@components/ui/Input'
 import { Box, Button, Checkbox, FormControlLabel } from '@mui/material'
 import React, { useContext, useState } from 'react'
 import { useFormik } from 'formik'
@@ -8,6 +7,7 @@ import { ToastContext } from '@context/ToastContext'
 import { login, register } from '@services/authService'
 import { AuthContext } from '@context/AuthContext'
 import Cookies from 'js-cookie'
+import InputCommon from '@components/ui/InputCommon'
 
 const Login = () => {
     const [isLogin, setIsLogin] = useState(true)
@@ -76,7 +76,9 @@ const Login = () => {
                     {!isLogin && <InputCommon id="name" label="Name" type="text" formik={formik} />}
                     <InputCommon id="email" label="Email" type="text" formik={formik} />
                     <InputCommon id="password" label="Password" type="password" formik={formik} />
-                    {!isLogin && <InputCommon id="cfmpassword" label="Confirm Password" type="password" formik={formik} />}
+                    {!isLogin && (
+                        <InputCommon id="cfmpassword" label="Confirm Password" type="password" formik={formik} />
+                    )}
                     {isLogin && <FormControlLabel control={<Checkbox />} label="Remember me" />}
                     <Button type="submit" variant="contained" fullWidth>
                         {isLogin ? 'SIGN IN' : 'SIGN UP'}
