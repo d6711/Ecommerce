@@ -1,13 +1,16 @@
 // src/components/layout/AppHeader.jsx
-import React from 'react'
+import React, { useContext } from 'react'
 import { Layout, Dropdown, Avatar, Badge } from 'antd'
 import { Bell, Home, User, LogOut } from 'lucide-react'
 import { useLocation } from 'react-router-dom'
+import { AuthContext } from '@src/context/AuthContext'
 
 const { Header } = Layout
 
 const HeaderLayout = () => {
     const location = useLocation()
+
+    const { handleLogout } = useContext(AuthContext)
 
     const headerStyle = {
         display: 'flex',
@@ -63,7 +66,7 @@ const HeaderLayout = () => {
                     menu={{
                         items: [
                             { key: 'profile', label: 'Profile', icon: <User size={16} /> },
-                            { key: 'logout', label: 'Logout', icon: <LogOut size={16} /> },
+                            { key: 'logout', label: 'Logout', icon: <LogOut size={16} />, onClick: handleLogout },
                         ],
                     }}
                     placement="bottomRight"

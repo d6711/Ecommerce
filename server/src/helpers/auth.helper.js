@@ -3,7 +3,7 @@ const { Unauthorized, BadRequest } = require('../core/error.exception')
 const { env } = require('../config/constants')
 const User = require('../models/user.model')
 
-function signToken({ payload, secretKey, expiresIn = '1d' }) {
+function signToken({ payload, secretKey, expiresIn = '1h' }) {
     try {
         return JWT.sign(payload, secretKey, {
             expiresIn

@@ -1,0 +1,322 @@
+import { useEffect, useState } from 'react'
+import { Button, Form, Input, Modal, Popconfirm, Space, Table, Upload, Tag, Descriptions, Image } from 'antd'
+import { PlusOutlined } from '@ant-design/icons'
+import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
+import { useToast } from '@src/context/ToastContext'
+import { getProducts, createProduct, updateProduct, deleteProduct } from '@src/services/productService'
+import { uploadMultipleFiles } from '@src/services/uploadService'
+
+const ProductPage = () => {
+    const [loading, setLoading] = useState(false)
+    const [products, setProducts] = useState([])
+    const [pagination, setPagination] = useState({
+        current: 1,
+        pageSize: 10,
+        total: 0,
+    })
+    const [searchQuery, setSearchQuery] = useState('')
+
+    // modal
+    const [modalOpen, setModalOpen] = useState(false)
+    const [modalType, setModalType] = useState('add') // add | view | edit
+    const [selected, setSelected] = useState(null)
+
+    const toast = useToast()
+    const [form] = Form.useForm()
+
+    // fetch products
+    const fetchProducts = async ({ page = 1, pageSize = 10, searchQuery = '' }) => {
+        setLoading(true)
+        try {
+            const res = await getProducts({
+                page,
+                limit: pageSize,
+                search: searchQuery.trim(),
+            })
+            setProducts(res.data?.metadata || [])
+            setPagination((prev) => ({
+                ...prev,
+                current: page,
+                pageSize: pageSize,
+                total: res.data?.pagination.totalDocuments || 0,
+            }))
+        } catch (err) {
+            console.error('Fetch products error:', err)
+            toast.error('Lỗi khi tải sản phẩm')
+        }
+        setLoading(false)
+    }
+
+    useEffect(() => {
+        fetchProducts({
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+            searchQuery,
+        })
+    }, [pagination.current, searchQuery])
+
+    const handleTableChange = (newPagination) => {
+        setPagination((prev) => ({
+            ...prev,
+            current: newPagination.current,
+        }))
+    }
+
+    // columns
+    const columns = [
+        {
+            title: 'STT',
+            width: 60,
+            align: 'center',
+            render: (_, __, index) => (pagination.current - 1) * pagination.pageSize + index + 1,
+        },
+        {
+            title: 'Tên',
+            dataIndex: 'name',
+            ellipsis: true,
+        },
+        {
+            title: 'Ảnh',
+            dataIndex: 'images',
+            width: 80,
+            align: 'center',
+            render: (imgs) =>
+                imgs?.length ? (
+                    <img
+                        src={imgs[0]}
+                        alt=""
+                        style={{
+                            width: 50,
+                            height: 50,
+                            objectFit: 'cover',
+                            borderRadius: 4,
+                        }}
+                    />
+                ) : (
+                    '-'
+                ),
+        },
+        {
+            title: 'Giá tiền',
+            dataIndex: 'price',
+            ellipsis: true,
+            render: (value) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(value),
+        },
+        {
+            title: 'Số lượng',
+            dataIndex: 'stock',
+            ellipsis: true,
+        },
+        {
+            title: 'Danh mục sản phẩm',
+            dataIndex: 'categoryId',
+            ellipsis: true,
+            render: (cat) => cat?.name || '-',
+        },
+
+        {
+            title: 'Trạng thái',
+            dataIndex: 'isActive',
+            width: 100,
+            align: 'center',
+            render: (val) => <Tag color={val ? 'green' : 'red'}>{val ? 'Đang bán' : 'Đang tạm ngưng'}</Tag>,
+        },
+
+        {
+            title: 'Hành động',
+            width: 150,
+            align: 'center',
+            render: (_, record) => (
+                <Space>
+                    <Button type="default" icon={<EyeOutlined />} onClick={() => handleView(record)} />
+                    <Button type="primary" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+                    <Popconfirm title="Xác nhận xoá?" onConfirm={() => handleDelete(record._id)}>
+                        <Button danger icon={<DeleteOutlined />} />
+                    </Popconfirm>
+                </Space>
+            ),
+        },
+    ]
+
+    // modal actions
+    const handleAdd = () => {
+        setModalType('add')
+        setSelected(null)
+        form.resetFields()
+        setModalOpen(true)
+    }
+
+    const handleView = (record) => {
+        setModalType('view')
+        setSelected(record)
+        setModalOpen(true)
+    }
+
+    const handleEdit = (record) => {
+        setModalType('edit')
+        setSelected(record)
+
+        form.setFieldsValue({
+            ...record,
+            images: record.images?.map((url, idx) => ({
+                uid: idx,
+                name: `image-${idx}.jpg`,
+                status: 'done',
+                url,
+            })),
+        })
+        setModalOpen(true)
+    }
+
+    const handleDelete = async (id) => {
+        await deleteProduct(id)
+        toast.success(`Đã xoá sản phẩm`)
+        fetchProducts({
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+            searchQuery,
+        })
+    }
+
+    const handleSave = async () => {
+        try {
+            const values = await form.validateFields()
+
+            // xử lý ảnh
+            if (values.images && values.images.length > 0) {
+                const filesToUpload = values.images
+                    .filter((f) => f.originFileObj) // chỉ file mới
+                    .map((f) => f.originFileObj)
+
+                let uploadedUrls = []
+                if (filesToUpload.length > 0) {
+                    uploadedUrls = await uploadMultipleFiles(filesToUpload)
+                }
+
+                // giữ lại ảnh cũ + merge ảnh mới
+                const existingUrls = values.images.filter((f) => f.url).map((f) => f.url)
+                values.images = [...existingUrls, ...uploadedUrls]
+            } else {
+                values.images = []
+            }
+
+            if (modalType === 'add') {
+                await createProduct(values)
+                toast.success('Đã thêm sản phẩm')
+            } else if (modalType === 'edit' && selected?._id) {
+                await updateProduct(selected._id, values)
+                toast.success('Đã cập nhật sản phẩm')
+            }
+
+            setModalOpen(false)
+            fetchProducts({
+                page: pagination.current,
+                pageSize: pagination.pageSize,
+                searchQuery,
+            })
+        } catch (err) {
+            console.error(err)
+            toast.error('Có lỗi khi lưu sản phẩm')
+        }
+    }
+
+    return (
+        <div>
+            <Space style={{ marginBottom: 16 }}>
+                <Input.Search placeholder="Tìm kiếm sản phẩm" onSearch={(val) => setSearchQuery(val)} enterButton />
+                <Button type="primary" onClick={handleAdd}>
+                    + Thêm sản phẩm
+                </Button>
+            </Space>
+
+            <Table
+                columns={columns}
+                dataSource={products}
+                loading={loading}
+                pagination={pagination}
+                onChange={handleTableChange}
+                rowKey="_id"
+            />
+
+            <Modal
+                title={
+                    modalType === 'add' ? 'Thêm sản phẩm' : modalType === 'edit' ? 'Chỉnh sửa sản phẩm' : 'Xem sản phẩm'
+                }
+                open={modalOpen}
+                onCancel={() => setModalOpen(false)}
+                onOk={modalType === 'view' ? undefined : handleSave}
+                okButtonProps={{ disabled: modalType === 'view' }}
+                width={600}
+            >
+                {modalType === 'view' ? (
+                    <Descriptions title="Chi tiết sản phẩm" bordered column={1} size="middle">
+                        <Descriptions.Item label="Tên">{selected?.name}</Descriptions.Item>
+
+                        <Descriptions.Item label="Giá">
+                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
+                                selected?.price,
+                            )}
+                        </Descriptions.Item>
+
+                        <Descriptions.Item label="Mô tả">{selected?.description}</Descriptions.Item>
+
+                        <Descriptions.Item label="Thương hiệu">{selected?.brand}</Descriptions.Item>
+
+                        <Descriptions.Item label="Kho">{selected?.stock}</Descriptions.Item>
+
+                        <Descriptions.Item label="Ảnh">
+                            <Space wrap>
+                                {selected?.images?.map((img, i) => (
+                                    <Image
+                                        key={i}
+                                        src={img}
+                                        width={80}
+                                        height={80}
+                                        style={{ objectFit: 'cover', borderRadius: 6 }}
+                                    />
+                                ))}
+                            </Space>
+                        </Descriptions.Item>
+                    </Descriptions>
+                ) : (
+                    <Form form={form} layout="vertical">
+                        <Form.Item label="Tên sản phẩm" name="name" rules={[{ required: true }]}>
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="Giá" name="price" rules={[{ required: true }]}>
+                            <Input type="number" />
+                        </Form.Item>
+                        <Form.Item label="Mô tả" name="description">
+                            <Input.TextArea rows={3} />
+                        </Form.Item>
+                        <Form.Item label="Thương hiệu" name="brand">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item label="Kho" name="stock">
+                            <Input type="number" />
+                        </Form.Item>
+                        <Form.Item
+                            label="Ảnh sản phẩm"
+                            name="images"
+                            valuePropName="fileList"
+                            getValueFromEvent={(e) => e && e.fileList}
+                        >
+                            <Upload
+                                listType="picture-card"
+                                beforeUpload={() => false} // không auto upload
+                                multiple
+                            >
+                                <div>
+                                    <PlusOutlined />
+                                    <div style={{ marginTop: 8 }}>Upload</div>
+                                </div>
+                            </Upload>
+                        </Form.Item>
+                    </Form>
+                )}
+            </Modal>
+        </div>
+    )
+}
+
+export default ProductPage

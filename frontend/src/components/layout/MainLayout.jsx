@@ -10,14 +10,21 @@ const MainLayout = () => {
     const [collapsed, setCollapsed] = useState(false)
 
     return (
-        <Layout className="min-h-screen flex overflow-hidden">
+        <Layout style={{ minHeight: '100vh', display: 'flex', overflow: 'hidden' }}>
             <SideBar collapsed={collapsed} setCollapsed={setCollapsed} />
 
-            <Layout className="flex flex-col h-screen flex-1">
+            <Layout style={{ display: 'flex', flexDirection: 'column', height: '100vh', flex: 1 }}>
                 <HeaderLayout />
 
-                <Content className="flex-1 overflow-y-auto bg-gray-50 p-6">
-                    <div className="mx-auto">
+                <Content
+                    style={{
+                        flex: 1,
+                        overflowY: 'auto',
+                        backgroundColor: '#f9fafb', // bg-gray-50
+                        padding: 24, // p-6 = 24px
+                    }}
+                >
+                    <div style={{ margin: '0 auto' }}>
                         <Outlet />
                     </div>
                 </Content>
