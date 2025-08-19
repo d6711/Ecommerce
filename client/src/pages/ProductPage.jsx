@@ -27,10 +27,6 @@ const ProductPage = () => {
     const [selected, setSelected] = useState(null)
 
     const { data, total, page, setPage, limit, setLimit, loading } = usePaginatedFetch('/products')
-    const handleView = (row) => {}
-    const handleAdd = (row) => {}
-    const handleEdit = (row) => {}
-    const handleDelete = (row) => {}
 
     const handleOpen = (mode, row = null) => {
         setMode(mode)
