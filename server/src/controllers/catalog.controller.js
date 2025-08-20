@@ -34,6 +34,13 @@ class NewsCatalog {
             metadata: await NewsCatalogService.deleteCatalog(req.params.id)
         }).send(res)
     }
+
+    async getAllCatalogs(req, res) {
+        new Success({
+            message: 'Get all news catalog successfully',
+            metadata: await NewsCatalogService.getAllCatalogs()
+        }).send(res)
+    }
 }
 
 module.exports = new NewsCatalog()

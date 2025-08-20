@@ -16,7 +16,7 @@ class ProductService {
 
         if (updateData.categoryId) {
             const category = await CategoryService.getCategoryById(updateData.categoryId)
-            if (category) throw new BadRequest('Category not found')
+            if (!category) throw new BadRequest('Category not found')
         }
         if (updateData.name) {
             const existing = await Product.findOne({ name: updateData.name.trim(), _id: { $ne: id } })

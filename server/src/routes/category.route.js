@@ -9,6 +9,7 @@ const router = Router()
 
 router.get('/', asyncHandler(categoryController.getAllCategories))
 router.get('/parent', asyncHandler(categoryController.getCategoryParent))
+router.get('/child', asyncHandler(categoryController.getCategoryChild))
 router.get('/:id', asyncHandler(categoryController.getCategoryById))
 router.get('/:parentId/child', asyncHandler(categoryController.getSubCategories))
 router.get('/:categoryId/products', asyncHandler(productController.getProductByCategoryId))

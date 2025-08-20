@@ -1,10 +1,28 @@
 import { useEffect, useState } from 'react'
-import { Button, Form, Input, Modal, Popconfirm, Space, Table, Upload, Tag, Descriptions, Image } from 'antd'
+import {
+    Button,
+    Form,
+    Input,
+    Modal,
+    Popconfirm,
+    Space,
+    Table,
+    Upload,
+    Tag,
+    Descriptions,
+    Image,
+    Row,
+    Col,
+    Select,
+    Switch,
+} from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useToast } from '@src/context/ToastContext'
 import { getProducts, createProduct, updateProduct, deleteProduct } from '@src/services/productService'
 import { uploadMultipleFiles } from '@src/services/uploadService'
+import { getCategoryChild } from '@src/services/categoryService'
+import { BRANDS } from '@src/utils/constants'
 
 const ProductPage = () => {
     const [loading, setLoading] = useState(false)
@@ -23,6 +41,8 @@ const ProductPage = () => {
 
     const toast = useToast()
     const [form] = Form.useForm()
+
+    const [categories, setCategories] = useState([])
 
     // fetch products
     const fetchProducts = async ({ page = 1, pageSize = 10, searchQuery = '' }) => {
@@ -47,18 +67,11 @@ const ProductPage = () => {
         setLoading(false)
     }
 
-    useEffect(() => {
-        fetchProducts({
-            page: pagination.current,
-            pageSize: pagination.pageSize,
-            searchQuery,
-        })
-    }, [pagination.current, searchQuery])
-
     const handleTableChange = (newPagination) => {
         setPagination((prev) => ({
             ...prev,
             current: newPagination.current,
+            pageSize: newPagination.pageSize,
         }))
     }
 
@@ -158,6 +171,7 @@ const ProductPage = () => {
 
         form.setFieldsValue({
             ...record,
+            categoryId: record.categoryId?._id,
             images: record.images?.map((url, idx) => ({
                 uid: idx,
                 name: `image-${idx}.jpg`,
@@ -220,6 +234,22 @@ const ProductPage = () => {
         }
     }
 
+    useEffect(() => {
+        fetchProducts({
+            page: pagination.current,
+            pageSize: pagination.pageSize,
+            searchQuery,
+        })
+    }, [pagination.current, pagination.pageSize, searchQuery])
+
+    useEffect(() => {
+        if (modalOpen) {
+            getCategoryChild()
+                .then((res) => setCategories(res.data.metadata || []))
+                .catch((err) => console.error('Fetch categories error:', err))
+        }
+    }, [modalOpen])
+
     return (
         <div>
             <Space style={{ marginBottom: 16 }}>
@@ -233,37 +263,33 @@ const ProductPage = () => {
                 columns={columns}
                 dataSource={products}
                 loading={loading}
-                pagination={pagination}
+                pagination={{
+                    ...pagination,
+                    showSizeChanger: true,
+                    pageSizeOptions: ['5', '10', '20', '50'],
+                }}
                 onChange={handleTableChange}
                 rowKey="_id"
             />
 
             <Modal
                 title={
-                    modalType === 'add' ? 'Thêm sản phẩm' : modalType === 'edit' ? 'Chỉnh sửa sản phẩm' : 'Xem sản phẩm'
+                    modalType === 'add'
+                        ? 'Thêm sản phẩm'
+                        : modalType === 'edit'
+                        ? 'Chỉnh sửa sản phẩm'
+                        : 'Chi tiết sản phẩm'
                 }
                 open={modalOpen}
                 onCancel={() => setModalOpen(false)}
                 onOk={modalType === 'view' ? undefined : handleSave}
                 okButtonProps={{ disabled: modalType === 'view' }}
-                width={600}
+                width={1000}
             >
                 {modalType === 'view' ? (
-                    <Descriptions title="Chi tiết sản phẩm" bordered column={1} size="middle">
-                        <Descriptions.Item label="Tên">{selected?.name}</Descriptions.Item>
-
-                        <Descriptions.Item label="Giá">
-                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
-                                selected?.price,
-                            )}
-                        </Descriptions.Item>
-
-                        <Descriptions.Item label="Mô tả">{selected?.description}</Descriptions.Item>
-
-                        <Descriptions.Item label="Thương hiệu">{selected?.brand}</Descriptions.Item>
-
-                        <Descriptions.Item label="Kho">{selected?.stock}</Descriptions.Item>
-
+                    <Descriptions bordered column={2} size="middle">
+                        <Descriptions.Item label="Tên sản phẩm">{selected?.name}</Descriptions.Item>
+                        <Descriptions.Item label="Số lượng trong kho">{selected?.stock}</Descriptions.Item>
                         <Descriptions.Item label="Ảnh">
                             <Space wrap>
                                 {selected?.images?.map((img, i) => (
@@ -277,41 +303,122 @@ const ProductPage = () => {
                                 ))}
                             </Space>
                         </Descriptions.Item>
+                        <Descriptions.Item label="Danh mục sản phẩm">{selected?.categoryId?.name}</Descriptions.Item>
+                        <Descriptions.Item label="Mô tả">{selected?.description}</Descriptions.Item>
+                        <Descriptions.Item label="Số sao trung bình">{selected?.ratingAvg}</Descriptions.Item>
+                        <Descriptions.Item label="Thông số kỹ thuật">{selected?.specification}</Descriptions.Item>
+                        <Descriptions.Item label="Số lượt đánh giá">{selected?.ratingCount}</Descriptions.Item>
+                        <Descriptions.Item label="Tags">{selected?.tags.join(', ')}</Descriptions.Item>
+                        <Descriptions.Item label="Thương hiệu">{selected?.brand}</Descriptions.Item>
+
+                        <Descriptions.Item label="Giá">
+                            {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(
+                                selected?.price,
+                            )}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Sản phẩm nổi bật">
+                            {selected?.isFeatured ? 'Có' : 'Không'}
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Số lượng đã bán">{selected?.soldCount}</Descriptions.Item>
+                        <Descriptions.Item label="Trạng thái">
+                            {selected?.isActive ? 'Đang bán' : 'Đang tạm dừng'}
+                        </Descriptions.Item>
                     </Descriptions>
                 ) : (
                     <Form form={form} layout="vertical">
-                        <Form.Item label="Tên sản phẩm" name="name" rules={[{ required: true }]}>
-                            <Input />
-                        </Form.Item>
-                        <Form.Item label="Giá" name="price" rules={[{ required: true }]}>
-                            <Input type="number" />
-                        </Form.Item>
-                        <Form.Item label="Mô tả" name="description">
-                            <Input.TextArea rows={3} />
-                        </Form.Item>
-                        <Form.Item label="Thương hiệu" name="brand">
-                            <Input />
-                        </Form.Item>
-                        <Form.Item label="Kho" name="stock">
-                            <Input type="number" />
-                        </Form.Item>
-                        <Form.Item
-                            label="Ảnh sản phẩm"
-                            name="images"
-                            valuePropName="fileList"
-                            getValueFromEvent={(e) => e && e.fileList}
-                        >
-                            <Upload
-                                listType="picture-card"
-                                beforeUpload={() => false} // không auto upload
-                                multiple
-                            >
-                                <div>
-                                    <PlusOutlined />
-                                    <div style={{ marginTop: 8 }}>Upload</div>
-                                </div>
-                            </Upload>
-                        </Form.Item>
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item label="Tên sản phẩm" name="name" rules={[{ required: true }]}>
+                                    <Input />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item label="Giá" name="price" rules={[{ required: true }]}>
+                                    <Input type="number" />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item label="Thương hiệu" name="brand" rules={[{ required: true }]}>
+                                    <Select placeholder="Chọn thương hiệu">
+                                        {BRANDS.map((brand) => (
+                                            <Select.Option key={brand.id} value={brand.name}>
+                                                {brand.name}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item label="Danh mục sản phẩm" name="categoryId" rules={[{ required: true }]}>
+                                    <Select placeholder="Chọn danh mục">
+                                        {categories.map((cat) => (
+                                            <Select.Option key={cat._id} value={cat._id}>
+                                                {cat.name}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <Form.Item label="Mô tả" name="description">
+                                    <Input.TextArea rows={3} />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <Form.Item label="Thông số kỹ thuật" name="specification">
+                                    <Input.TextArea rows={3} />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <Form.Item label="Tags" name="tags">
+                                    <Select mode="tags" placeholder="Nhập hoặc chọn tag" />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+                        <Row gutter={16}>
+                            <Col span={4}>
+                                <Form.Item label="Sản phẩm nổi bật" name="isFeatured" valuePropName="checked">
+                                    <Switch />
+                                </Form.Item>
+                            </Col>
+                            <Col span={4}>
+                                <Form.Item label="Trạng thái" name="isActive" valuePropName="checked">
+                                    <Switch checkedChildren="Đang bán" unCheckedChildren="Tạm dừng" />
+                                </Form.Item>
+                            </Col>
+                        </Row>
+
+                        <Row gutter={16}>
+                            <Col span={24}>
+                                <Form.Item
+                                    label="Ảnh sản phẩm"
+                                    name="images"
+                                    valuePropName="fileList"
+                                    getValueFromEvent={(e) => e && e.fileList}
+                                >
+                                    <Upload
+                                        listType="picture-card"
+                                        beforeUpload={() => false} // không auto upload
+                                        multiple
+                                    >
+                                        <div>
+                                            <PlusOutlined />
+                                            <div style={{ marginTop: 8 }}>Upload</div>
+                                        </div>
+                                    </Upload>
+                                </Form.Item>
+                            </Col>
+                        </Row>
                     </Form>
                 )}
             </Modal>

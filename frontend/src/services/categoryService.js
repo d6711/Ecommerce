@@ -10,8 +10,11 @@ export const getCategoryParents = () => {
     return axiosClient.get('/categories/parent')
 }
 
+export const getCategoryChild = async () => {
+    return await axiosClient.get('/categories/child')
+}
 
-export const getCategoryChild = async (parentId) => {
+export const getCategoryChildByParentId = async (parentId) => {
     return await axiosClient.get(`/categories/${parentId}/child`)
 }
 

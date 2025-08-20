@@ -7,7 +7,9 @@ const { grantAccess } = require('../middlewares/rbac')
 
 router.use(authentication)
 
-router.get('/my-order', grantAccess('readOwn', 'order'), asyncHandler(orderController.getMyOrder))
 router.get('/', grantAccess('readAny', 'order'), asyncHandler(orderController.getOrders))
+router.patch('/:id', grantAccess('updateAny', 'order'), asyncHandler(orderController.updateStatusOrder))
+router.get('/my-order', grantAccess('readOwn', 'order'), asyncHandler(orderController.getMyOrder))
+
 
 module.exports = router

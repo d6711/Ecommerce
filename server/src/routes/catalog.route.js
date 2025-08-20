@@ -5,6 +5,7 @@ const { authentication } = require('../middlewares/auth')
 const catalogController = require('../controllers/catalog.controller')
 
 router.get('/', asyncHandler(catalogController.getCatalogs))
+router.get('/all', asyncHandler(catalogController.getAllCatalogs))
 router.get('/:id', asyncHandler(catalogController.getCatalogById))
 
 router.use(authentication)

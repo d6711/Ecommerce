@@ -3,9 +3,11 @@ import { AuthProvider } from '@src/context/AuthContext'
 import { ToastProvider } from '@src/context/ToastContext'
 import CategoryPage from '@src/pages/CategoryPage'
 import CustomerPage from '@src/pages/CustomerPage'
+import DiscountPage from '@src/pages/DiscountPage'
 import HomePage from '@src/pages/HomePage'
 import InventoryPage from '@src/pages/InventoryPage'
 import LoginPage from '@src/pages/LoginPage'
+import NewsCatalogPage from '@src/pages/NewsCatalogPage'
 import NewsPage from '@src/pages/NewsPage'
 import NotFoundPage from '@src/pages/NotFoundPage'
 import OrderPage from '@src/pages/OrderPage'
@@ -42,7 +44,9 @@ const App = () => {
                                 <Route path="orders" element={<OrderPage />} />
                                 <Route path="products" element={<ProductPage />} />
                                 <Route path="categories" element={<CategoryPage />} />
+                                <Route path="discounts" element={<DiscountPage />} />
                                 <Route path="news" element={<NewsPage />} />
+                                <Route path="catalogs" element={<NewsCatalogPage />} />
                                 <Route path="inventories" element={<InventoryPage />} />
                                 <Route path="customers" element={<CustomerPage />} />
                                 <Route path="settings" element={<Setting />} />

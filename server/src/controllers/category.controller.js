@@ -46,6 +46,13 @@ class CategoryController {
             metadata: await CategoryService.deleteCategory(req.params.id)
         }).send(res)
     }
+    async getCategoryChild(req, res) {
+        new Success({
+            message: 'Get category child successfully',
+            metadata: await CategoryService.getCategoryChild()
+        }).send(res)
+    }
+
 }
 
 module.exports = new CategoryController()

@@ -26,26 +26,12 @@ const SideBar = ({ collapsed, setCollapsed }) => {
         { key: '/', icon: <Home size={18} />, label: 'Thống kê' },
         { key: '/users', icon: <User size={18} />, label: 'QL Nhân sự' },
         { key: '/customers', icon: <Users size={18} />, label: 'QL Khách hàng' },
-        {
-            key: 'products_management',
-            icon: <AppWindow size={18} />,
-            label: 'QL Sản phẩm',
-            children: [
-                { key: '/categories', icon: <Tag size={18} />, label: 'Danh mục' },
-                { key: '/products', icon: <Package size={18} />, label: 'Sản phẩm' },
-            ],
-        },
-        { key: '/suppliers', icon: <BookUser size={18} />, label: 'QL Nhà cung cấp' },
-        {
-            key: 'orders_management',
-            icon: <ShoppingCart size={18} />,
-            label: 'QL Đơn hàng',
-            children: [
-                { key: '/orders', icon: <PanelRightOpen size={18} />, label: 'QL Đơn hàng' },
-                { key: '/payments', icon: <CreditCard size={18} />, label: 'QL Thanh toán' },
-            ],
-        },
-        { key: '/discounts', icon: <Settings size={18} />, label: 'QL Khuyến mại' },
+        { key: '/categories', icon: <Tag size={18} />, label: 'QL Danh mục SP' },
+        { key: '/products', icon: <Package size={18} />, label: 'Quản lý Sản phẩm' },
+        { key: '/orders', icon: <PanelRightOpen size={18} />, label: 'QL Đơn hàng' },
+        { key: '/discounts', icon: <BookUser size={18} />, label: 'QL Khuyến mại' },
+        { key: '/catalogs', icon: <Package size={18} />, label: 'Danh mục tin tức' },
+        { key: '/news', icon: <ShoppingCart size={18} />, label: 'QL Tin tức' },
         { key: '/inventories', icon: <Warehouse size={18} />, label: 'QL Tồn kho' },
         { key: '/settings', icon: <Settings size={18} />, label: 'Cài đặt' },
     ]

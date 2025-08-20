@@ -9,7 +9,7 @@ export const uploadImage = async (file) => {
         headers: { 'Content-Type': 'multipart/form-data' },
     })
 
-    return res.data?.imageUrl || null
+    return res.data?.metadata.imageUrl || null
 }
 
 // Upload nhiều ảnh
@@ -24,5 +24,5 @@ export const uploadMultipleFiles = async (files) => {
     })
 
     // response dạng array → map chỉ lấy imageUrl
-    return (res.data || []).map(item => item.imageUrl)
+    return (res.data.metadata || []).map(item => item.imageUrl)
 }

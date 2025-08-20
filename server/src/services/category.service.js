@@ -33,6 +33,9 @@ class CategoryService {
         if (!category) throw new BadRequest('Category not found')
         return category
     }
+    static async getCategoryChild() {
+        return await Category.find({ parentId: { $ne: null } }).lean()
+    }
     static async deleteCategory(id) {
         const category = await Category.findById(id)
         if (!category) throw new BadRequest('Category not found')

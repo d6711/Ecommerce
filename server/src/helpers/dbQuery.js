@@ -9,7 +9,7 @@ async function pagination({
     limit = 10,
     sortBy = 'createdAt',
     order = 'desc',
-    select = '-__v -createdAt -updatedAt',
+    select = '-__v -updatedAt',
     populate = null
 }) {
     try {

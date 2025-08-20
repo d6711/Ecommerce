@@ -21,6 +21,10 @@ class NewsCatalogService {
         })
     }
 
+    static async getAllCatalogs() {
+        return await NewsCatalog.find({}).lean()
+    }
+
     static async getCatalogById(id) {
         const catalog = await NewsCatalog.findById(id)
         if (!catalog) throw new BadRequest('News catalog not found')
