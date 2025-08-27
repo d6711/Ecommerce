@@ -21,9 +21,11 @@ class DiscountController {
         }).send(res)
     }
     async getDiscountsByQuery(req, res) {
+        const { data, page, limit, totalDocuments, totalPages } = await DiscountService.getDiscountsByQuery(req.query)
         new Success({
             message: 'Get discount code success',
-            metadata: await DiscountService.getDiscountsByQuery(req.query)
+            pagination: { page, limit, totalDocuments, totalPages },
+            metadata: data
         }).send(res)
     }
     async getDiscountById(req, res) {

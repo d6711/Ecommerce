@@ -1,5 +1,19 @@
 import { useEffect, useState } from 'react'
-import { Button, Form, Input, Modal, Popconfirm, Space, Table, Upload, Tag, Select, Switch, Image } from 'antd'
+import {
+    Button,
+    Form,
+    Input,
+    Modal,
+    Popconfirm,
+    Space,
+    Table,
+    Upload,
+    Tag,
+    Select,
+    Switch,
+    Image,
+    Descriptions,
+} from 'antd'
 import { PlusOutlined, EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useToast } from '@src/context/ToastContext'
 import {
@@ -264,24 +278,20 @@ const CategoryPage = () => {
                 width={800}
             >
                 {modalType === 'view' ? (
-                    <div>
-                        <p>
-                            <b>Tên:</b> {selected?.name}
-                        </p>
-                        <p>
-                            <b>Slug:</b> {selected?.slug}
-                        </p>
-                        <p>
-                            <b>Mô tả:</b> {selected?.description}
-                        </p>
-                        <p>
-                            <b>Danh mục cha:</b> {selected?.parentId?.name || '-'}
-                        </p>
-                        <p>
-                            <b>Trạng thái:</b> {selected?.isActive ? 'Hoạt động' : 'Ẩn'}
-                        </p>
-                        {selected?.image && <Image src={selected.image} width={100} />}
-                    </div>
+                    <Descriptions title="Chi tiết danh mục" bordered column={1} size="middle">
+                        <Descriptions.Item label="Tên">{selected?.name}</Descriptions.Item>
+                        <Descriptions.Item label="Slug">{selected?.slug}</Descriptions.Item>
+                        <Descriptions.Item label="Mô tả">{selected?.description}</Descriptions.Item>
+                        <Descriptions.Item label="Danh mục cha">{selected?.parentId?.name || '-'}</Descriptions.Item>
+                        <Descriptions.Item label="Trạng thái">
+                            {selected?.isActive ? <Tag color="green">Hoạt động</Tag> : <Tag color="red">Ẩn</Tag>}
+                        </Descriptions.Item>
+                        {selected?.image && (
+                            <Descriptions.Item label="Hình ảnh">
+                                <Image src={selected.image} width={100} />
+                            </Descriptions.Item>
+                        )}
+                    </Descriptions>
                 ) : (
                     <Form form={form} layout="vertical">
                         <Form.Item label="Tên danh mục" name="name" rules={[{ required: true }]}>

@@ -33,7 +33,7 @@ class DiscountService {
     }
     static async updateDiscount(id, bodyUpdate) {
         const foundDiscount = await Discount.findById(id)
-        if (foundDiscount) throw new BadRequest('Discount code not found')
+        if (!foundDiscount) throw new BadRequest('Discount code not found')
 
         const { code, startDate, endDate, type, value, applyTo, productId, categoryId, ...data } = bodyUpdate
         const discount = await Discount.findOne({ code, _id: { $ne: id } })
