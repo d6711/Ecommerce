@@ -82,9 +82,11 @@ class ProductService {
             model: Product,
             search, searchFields: ['name', 'description', 'specification'],
             filter, page, limit, sortBy, order,
-            select: "-__v -createdAt -updatedAt",
             populate: { path: 'categoryId', select: 'name' }
         })
+    }
+    static async totalProducts() {
+        return await Product.countDocuments()
     }
 }
 

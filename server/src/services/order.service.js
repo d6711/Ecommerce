@@ -27,6 +27,9 @@ class OrderService {
         if (!order) throw new BadRequest('Order not found')
         return await Order.updateOne({ _id: orderId }, { status })
     }
+    static async getAllOrders() {
+        return await Order.find().lean()
+    }
 }
 
 module.exports = OrderService

@@ -220,6 +220,9 @@ class AuthService {
     static async getMe(userId) {
         return await User.findById(userId)
     }
+    static async totalUser() {
+        return await User.countDocuments({})
+    }
 }
 
 module.exports = AuthService
