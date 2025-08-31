@@ -12,11 +12,8 @@ const UserSchema = new Schema(
         verify: { type: Boolean, default: false },
         otpCode: Number,
         otpExpires: Date,
-        // role: {
-        //     type: String,
-        //     enum: Object.values(Roles),
-        //     default: Roles.USER,
-        // },
+        phone: String,
+        address: String,
         role: { type: Types.ObjectId, ref: 'Role' },
         status: {
             type: String,

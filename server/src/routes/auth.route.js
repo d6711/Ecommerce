@@ -16,6 +16,7 @@ router.get('/user/verify-link', asyncHandler(authController.verifyEmailLink))
 
 router.post('/user/forgot-password', validate(forgotPasswordSchema), asyncHandler(authController.forgotPasswordByLink))
 router.post('/user/reset-password/:resetToken', asyncHandler(authController.resetPasswordByLink))
+router.get('/customers', asyncHandler(authController.getAllCustomers))
 
 router.post('/user/login', validate(loginUserSchema), asyncHandler(authController.login))
 

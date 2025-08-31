@@ -15,3 +15,8 @@ export const getInfo = async () => {
 export const logout = async () => {
     return await axiosClient.post('/auth/user/logout')
 }
+
+
+export const getAllCustomers = async ({ page, limit, search }) => {
+    return await axiosClient.get(`/auth/customers?page=${page}&limit=${limit}&search=${search}`)
+}

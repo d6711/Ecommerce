@@ -10,6 +10,8 @@ const { templateVerifyOtp, templateVerifyLink } = require("../utils/templateEmai
 const bcrypt = require('bcrypt')
 const crypto = require('crypto')
 const RbacService = require("./rbac.service")
+const { pagination } = require("../helpers/dbQuery")
+const Role = require("../models/role.model")
 
 class AuthService {
     static async signUp({ email, name, password }) {
@@ -223,6 +225,21 @@ class AuthService {
     static async totalUser() {
         return await User.countDocuments({})
     }
+    static async getAllCustomers({ page, limit, search }) {
+        // tìm _id của role user
+        const userRole = await Role.findOne({ name: 'user' }).select('_id');
+
+        return await pagination({
+            model: User,
+            filter: { role: userRole?._id },  // lọc luôn user có role là 'user'
+            page,
+            limit,
+            search,
+            populate: { path: 'role', select: 'name' }
+        })
+    }
+
+
 }
 
 module.exports = AuthService

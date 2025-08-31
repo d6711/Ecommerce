@@ -89,6 +89,19 @@ class AuthController {
             metadata: await AuthService.getMe(req.user.userId)
         }).send(res)
     }
+    async getAllCustomers(req, res) {
+        const { data, page, limit, totalDocuments, totalPages } = await AuthService.getAllCustomers(req.query)
+        new Success({
+            message: 'Get all customers successfully',
+            pagination: {
+                page,
+                limit,
+                totalDocuments,
+                totalPages
+            },
+            metadata: data
+        }).send(res)
+    }
 }
 
 module.exports = new AuthController()
