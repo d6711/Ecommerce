@@ -24,6 +24,7 @@ import { uploadMultipleFiles } from '@src/services/uploadService'
 import { getCategoryChild } from '@src/services/categoryService'
 import { BRANDS } from '@src/utils/constants'
 import { exportToExcel } from '@src/utils/exportToExcel'
+import { usePermission } from '@src/context/PermissionContext'
 
 const ProductPage = () => {
     const [loading, setLoading] = useState(false)
@@ -41,6 +42,7 @@ const ProductPage = () => {
     const [selected, setSelected] = useState(null)
 
     const toast = useToast()
+    const { canAccess, roleName } = usePermission()
     const [form] = Form.useForm()
 
     const [categories, setCategories] = useState([])
@@ -143,10 +145,14 @@ const ProductPage = () => {
             render: (_, record) => (
                 <Space>
                     <Button type="default" icon={<EyeOutlined />} onClick={() => handleView(record)} />
-                    <Button type="primary" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
-                    <Popconfirm title="Xác nhận xoá?" onConfirm={() => handleDelete(record._id)}>
-                        <Button danger icon={<DeleteOutlined />} />
-                    </Popconfirm>
+                    {canAccess('update:any', 'product') && (
+                        <Button type="primary" icon={<EditOutlined />} onClick={() => handleEdit(record)} />
+                    )}
+                    {canAccess('delete:any', 'product') && (
+                        <Popconfirm title="Xác nhận xoá?" onConfirm={() => handleDelete(record._id)}>
+                            <Button danger icon={<DeleteOutlined />} />
+                        </Popconfirm>
+                    )}
                 </Space>
             ),
         },
@@ -306,9 +312,12 @@ const ProductPage = () => {
         <div>
             <Space style={{ marginBottom: 16 }}>
                 <Input.Search placeholder="Tìm kiếm sản phẩm" onSearch={(val) => setSearchQuery(val)} enterButton />
-                <Button type="primary" onClick={handleAdd}>
-                    + Thêm sản phẩm
-                </Button>
+
+                {canAccess('create:any', 'product') && (
+                    <Button type="primary" onClick={handleAdd}>
+                        + Thêm sản phẩm
+                    </Button>
+                )}
                 <Button onClick={handleExportExcel}>Xuất Excel</Button>
             </Space>
 

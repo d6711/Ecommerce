@@ -67,6 +67,51 @@ class RbacService {
             }
         ])
     }
+    static async getRoleByRoleName(roleName) {
+        return await Role.aggregate([
+            {
+                $match: { name: roleName } // lọc role theo tên
+            },
+            {
+                $unwind: '$grants'
+            },
+            {
+                $lookup: {
+                    from: 'Resources', // chú ý Mongo collection mặc định thường lowercase
+                    localField: 'grants.resource',
+                    foreignField: '_id',
+                    as: 'resource'
+                }
+            },
+            {
+                $unwind: '$resource'
+            },
+            {
+                $project: {
+                    role: '$name',
+                    resource: '$resource.name',
+                    action: '$grants.actions',
+                    attributes: '$grants.attributes'
+                }
+            },
+            {
+                $unwind: '$action'
+            },
+            {
+                $project: {
+                    _id: 0,
+                    role: 1,
+                    resource: 1,
+                    action: '$action',
+                    attributes: 1
+                }
+            }
+        ])
+    }
+
+    static async getRoles() {
+        return await Role.find()
+    }
     static async createResource(body) {
         return await Resource.create(body)
     }

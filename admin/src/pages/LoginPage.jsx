@@ -15,7 +15,6 @@ function LoginPage() {
     const [isLogin, setIsLogin] = React.useState(true)
     const toast = useToast()
     const [isLoading, setIsLoading] = React.useState(false)
-    const { setUserId } = useContext(AuthContext)
 
     const navigate = useNavigate()
 
@@ -24,27 +23,38 @@ function LoginPage() {
 
     const [form] = Form.useForm()
 
+    const { setUserId, setUserInfo } = useContext(AuthContext)
+
     const onFinish = async (values) => {
-        console.log(values)
         if (isLoading) return
         setIsLoading(true)
+
         if (isLogin) {
             try {
                 const res = await login(values)
                 toast.success(res?.data.message)
+
                 const {
                     accessToken,
                     refreshToken,
                     userInfo: { _id: userId },
                 } = res.data.metadata
-                setUserId(userId)
+
+                // Lưu token + userId vào cookie
                 Cookies.set('accessToken', accessToken)
                 Cookies.set('refreshToken', refreshToken)
                 Cookies.set('userId', userId)
+
+                setUserId(userId)
+
+                // 👇 Gọi API getInfo luôn để cập nhật userInfo
+                const info = await getInfo()
+                setUserInfo(info.data.metadata)
+
                 setIsLoading(false)
                 navigate('/')
             } catch (error) {
-                toast.error(error.response.data.message)
+                toast.error(error.response?.data?.message || 'Login failed')
                 setIsLoading(false)
             }
         } else {
@@ -54,7 +64,7 @@ function LoginPage() {
                 setIsLoading(false)
                 setIsLogin(true)
             } catch (error) {
-                toast.error(error.response.data.message)
+                toast.error(error.response?.data?.message || 'Register failed')
                 setIsLoading(false)
             }
         }

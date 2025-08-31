@@ -106,7 +106,7 @@ const InventoryPage = () => {
 
     const handleExportExcel = async () => {
         try {
-            const res = await getProducts({ page: 1, limit: 10000 })
+            const res = await getProducts({ page: 1, limit: 10000, search: '' })
             const allProducts = res.data?.metadata || []
 
             const headers = ['STT', 'Tên sản phẩm', 'Số lượng tồn', 'Trạng thái']

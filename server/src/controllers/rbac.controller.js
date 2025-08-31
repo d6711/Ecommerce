@@ -38,6 +38,24 @@ class RbacController {
             metadata: await RbacService.setRole(req.query)
         }).send(res)
     }
+    async getRoles(req, res) {
+        new Success({
+            message: 'Get role list',
+            metadata: await RbacService.getRoles()
+        }).send(res)
+    }
+    async getRoleNameByUserId(req, res) {
+        new Success({
+            message: 'Get role name by user id',
+            metadata: await RbacService.getRoleNameByUserId(req.params.userId)
+        }).send(res)
+    }
+    async getRoleByRoleName(req, res) {
+        new Success({
+            message: 'Get role by role name',
+            metadata: await RbacService.getRoleByRoleName(req.params.roleName)
+        }).send(res)
+    }
 }
 
 module.exports = new RbacController()
